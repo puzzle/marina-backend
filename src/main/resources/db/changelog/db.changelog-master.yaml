@@ -1,0 +1,44 @@
+databaseChangeLog:
+   - changeSet:
+      id: createSequence
+      author: philipona
+      changes:
+      - createSequence:
+          cycle: false
+          incrementBy: 1
+          sequenceName: hibernate_sequence
+          startValue: 5
+   - changeSet:
+      id: createEmplyeTable
+      author: phil-pona
+      changes:
+        - createTable:
+            tableName: employe
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: DATETIME
+              - column:
+                  name: modified_date
+                  type: DATETIME
+              - column:
+                  name: version
+                  type: INT
+              - column:
+                  name: first_name
+                  type: varchar(100)
+              - column:
+                  name: last_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: brutto_salary
+                  type: decimal
