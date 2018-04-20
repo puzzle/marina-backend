@@ -1,3 +1,5 @@
+Travis [![Build Status](https://travis-ci.org/puzzle/marina-backend.svg?branch=master)](https://travis-ci.org/puzzle/marina-backend)
+
 # Marina Backend
 
 This Springboot application provides the backend to the marina gui application
