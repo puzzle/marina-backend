@@ -35,7 +35,7 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
             http.csrf().disable();
         }
 
-        //http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/webjars/**").permitAll().anyRequest()
-		//.authenticated();
+        http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/webjars/**").permitAll().anyRequest()
+		.authenticated();
     }
 }
