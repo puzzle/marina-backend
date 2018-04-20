@@ -55,3 +55,10 @@ SECURITY_OAUTH2_CLIENT_AUTHENTICATIONSCHEME: header
 SECURITY_OAUTH2_CLIENT_CLIENTAUTHENTICATIONSCHEME: header
 SECURITY_OAUTH2_RESOURCE_USERINFOURI
 ```
+
+## Deploy to OpenShift
+
+* create Project
+* add persistent Postgresql database
+* add to Project "Deploy Image" puzzle/marina-backend and configure the dc
+* add route to expose the backend
