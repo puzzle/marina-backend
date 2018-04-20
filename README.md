@@ -4,6 +4,22 @@ Travis [![Build Status](https://travis-ci.org/puzzle/marina-backend.svg?branch=m
 
 This Springboot application provides the backend to the marina gui application
 
+## Start Application with Docker pure
+
+First start a Postgresql container with attached volume, run in the project root
+
+```
+docker run -d --name postgresql-container -v$(pwd)/datastore-postgresql:/var/lib/pgsql/data -e POSTGRESQL_USER=marina -e POSTGRESQL_PASSWORD=marina -e POSTGRESQL_DATABASE=marina centos/postgresql-96-centos7
+```
+
+Then start the backend application and link it to the database container
+
+```
+docker run -d -e SECURITY_OAUTH2_CLIENT_ACCESSTOKENURI=[url] -e SECURITY_OAUTH2_CLIENT_CLIENTID=[clientid] -e SECURITY_OAUTH2_CLIENT_CLIENTSECRET=[secret] -e SECURITY_OAUTH2_CLIENT_USERAUTHORIZATIONURI=[url] -e SECURITY_OAUTH2_RESOURCE_USERINFOURI=[url] -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql-container:5432/marina -e SPRING_DATASOURCE_PASSWORD=marina -e SPRING_DATASOURCE_USERNAME=marina -p 8080:8080 --link postgresql-container puzzle/marina-backend
+```
+
+or use `docker-compose up` to do all together with docker-compose
+
 ## Database changes
 
 We use Lliquibase to manage the database scheme and changes
