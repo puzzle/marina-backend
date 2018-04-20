@@ -4,21 +4,29 @@ import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import ch.puzzle.marinabackend.MarinaBackendApplication;
+import ch.puzzle.marinabackend.TestConfiguration;
+
 @RunWith(SpringRunner.class)
-@DataJpaTest
-@TestPropertySource(locations = "classpath:application-integrationtest.properties")
+@SpringBootTest(classes = { MarinaBackendApplication.class,
+		TestConfiguration.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+@Transactional
 public class EmployeResourceDataTest {
 	
 	@Autowired
-	private TestEntityManager entityManager;
+	private EntityManager entityManager;
 
 	@Autowired
 	private EmployeRepository employeRepository;

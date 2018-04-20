@@ -1,0 +1,33 @@
+#Use application.properties only for default values, use Environment Variables to configure the application
+
+# Postgresql DB default Values
+spring:
+   datasource:
+      driverClassName: org.h2.Driver
+      url: jdbc:h2:mem:marina;MODE=PostgreSQL
+      username: marina
+      password: marina
+# Oauth Client configuration
+security:
+  user:
+    password: password
+  oauth2:
+    client:
+      client-id: clientid
+      client-secret: secret
+      accessTokenUri: https://localhost/token
+      userAuthorizationUri: https://localhost/auth
+      tokenName: access_token
+      authenticationScheme: header
+      clientAuthenticationScheme: header
+    resource:
+      userInfoUri: https://localhost/userinfo
+    authorization:
+      checkTokenAccess: isAuthenticated()
+  enable-csrf: false
+     
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
