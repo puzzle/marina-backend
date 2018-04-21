@@ -30,7 +30,8 @@ public class MarinaBackendApplicationTests {
 	
 	
 	@Test
-	public void contextLoads() {
+	public void contextLoadsAndAcuratorOk() throws Exception {
+	    mvc.perform(get("/actuator/health").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
 	
 	@Test
