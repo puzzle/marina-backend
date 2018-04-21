@@ -4,7 +4,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.net.URI;
-import java.security.Principal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,18 +59,6 @@ public class EmployeeResource {
 
         return ResponseEntity.created(location).build();
 
-    }
-    
-    @GetMapping("/employees/user")
-    public String createEmployeFromPrincipal(Principal principal) {
-        
-//        OAuth2Authentication auth = (OAuth2Authentication) principal;
-//        auth.getUserAuthentication().
-        
-        //Employe e = new Employe();
-//        e.setEmail(principal.);
-//        return createEmploye();
-        return "";
     }
 
     @PutMapping("/employees/{id}")
