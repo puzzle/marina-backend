@@ -1,4 +1,4 @@
-package ch.puzzle.marinabackend.employe;
+package ch.puzzle.marinabackend.employee;
 
 import ch.puzzle.marinabackend.AbstractEntity;
 
@@ -7,8 +7,8 @@ import javax.persistence.Entity;
 import java.math.BigDecimal;
 
 @Entity
-public class Employe extends AbstractEntity {
-    public Employe() {
+public class Employee extends AbstractEntity {
+    public Employee() {
     }
 
     @Column(name = "first_name")
@@ -16,6 +16,12 @@ public class Employe extends AbstractEntity {
 
     @Column(name = "last_name")
     private String lastName;
+    
+    @Column(name = "email")
+    private String email;
+    
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "brutto_salary")
     private BigDecimal bruttoSalary;
@@ -34,6 +40,22 @@ public class Employe extends AbstractEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public BigDecimal getBruttoSalary() {

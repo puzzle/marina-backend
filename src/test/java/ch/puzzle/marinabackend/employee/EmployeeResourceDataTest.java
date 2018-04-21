@@ -1,4 +1,4 @@
-package ch.puzzle.marinabackend.employe;
+package ch.puzzle.marinabackend.employee;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,37 +18,41 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import ch.puzzle.marinabackend.MarinaBackendApplication;
 import ch.puzzle.marinabackend.TestConfiguration;
+import ch.puzzle.marinabackend.employee.EmployeeRepository;
+import ch.puzzle.marinabackend.employee.Employee;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { MarinaBackendApplication.class,
 		TestConfiguration.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Transactional
-public class EmployeResourceDataTest {
+public class EmployeeResourceDataTest {
 	
 	@Autowired
 	private EntityManager entityManager;
 
 	@Autowired
-	private EmployeRepository employeRepository;
+	private EmployeeRepository employeRepository;
 
 
 	@Test
 	public void shouldFindAllEmployees() throws Exception {
 	    //given
-		Employe employe = new Employe();
-		employe.setFirstName("Housi");
-		employe.setLastName("Mousi");
-		employe.setBruttoSalary(BigDecimal.valueOf(1000.45));
-		entityManager.persist(employe);
+		Employee employee = new Employee();
+		employee.setFirstName("Housi");
+		employee.setLastName("Mousi");
+		employee.setEmail("housi.mousi@marina.ch");
+		employee.setUsername("hmousi");
+		employee.setBruttoSalary(BigDecimal.valueOf(1000.45));
+		entityManager.persist(employee);
 	    entityManager.flush();
 
 	    //when
-	    Iterable<Employe> employees = employeRepository.findAll();
+	    Iterable<Employee> employees = employeRepository.findAll();
 
 	    //then
-	    for(Employe e: employees){
-	    	assertEquals(e,employe);
+	    for(Employee e: employees){
+	    	assertEquals(e,employee);
 	    	assertNotNull(e.getCreatedDate());
 	    	assertNotNull(e.getModifiedDate());
 	    }

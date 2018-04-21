@@ -1,4 +1,4 @@
-package ch.puzzle.marinabackend.employe;
+package ch.puzzle.marinabackend.employee;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -35,28 +35,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.puzzle.marinabackend.MarinaBackendApplication;
 import ch.puzzle.marinabackend.TestConfiguration;
+import ch.puzzle.marinabackend.employee.EmployeeRepository;
+import ch.puzzle.marinabackend.employee.Employee;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { MarinaBackendApplication.class,
 		TestConfiguration.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc(secure=true)
 @ActiveProfiles("test")
-public class EmployeResourceTest {
+public class EmployeeResourceTest {
 
 	@Autowired
 	private MockMvc mvc;
 
 
 	@MockBean
-	private EmployeRepository employeRepository;
+	private EmployeeRepository employeRepository;
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	private Employe housi;
+	private Employee housi;
 
 	@Before
 	public void setup() throws Exception {
-		housi = new Employe();
+		housi = new Employee();
 		housi.setId(Long.valueOf(1));
 		housi.setFirstName("Housi");
 		housi.setLastName("Mousi");
@@ -79,7 +81,7 @@ public class EmployeResourceTest {
 	@WithMockUser(username = "admin", roles = { "ADMIN" }) 
 	public void shouldFindAllEmployees() throws Exception {
 		// given
-		List<Employe> allEmployees = singletonList(housi);
+		List<Employee> allEmployees = singletonList(housi);
 		when(employeRepository.findAll()).thenReturn(allEmployees);
 
 		// when then
@@ -131,7 +133,7 @@ public class EmployeResourceTest {
 	@WithMockUser(username = "admin", roles = { "ADMIN" }) 
 	public void shouldCreateEmploye() throws Exception {
 		// given
-		when(employeRepository.save(any(Employe.class))).thenReturn(housi);
+		when(employeRepository.save(any(Employee.class))).thenReturn(housi);
 
 		// when then
 		mvc.perform(post("/employees").param("id", housi.getId().toString())

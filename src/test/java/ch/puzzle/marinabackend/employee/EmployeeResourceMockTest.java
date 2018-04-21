@@ -1,6 +1,9 @@
-package ch.puzzle.marinabackend.employe;
+package ch.puzzle.marinabackend.employee;
 
 import ch.puzzle.marinabackend.TestConfiguration;
+import ch.puzzle.marinabackend.employee.EmployeeResource;
+import ch.puzzle.marinabackend.employee.Employee;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,22 +32,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         TestConfiguration.class}, webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class EmployeResourceMockTest {
+public class EmployeeResourceMockTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private EmployeResource employeResource;
+    private EmployeeResource employeResource;
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void shouldFindAllEmployees() throws Exception {
         //given
-        Employe employe = new Employe();
+        Employee employe = new Employee();
         employe.setFirstName("Housi");
 
-        List<Employe> allEmployees = singletonList(employe);
+        List<Employee> allEmployees = singletonList(employe);
 
         given(employeResource.getEmployees()).willReturn(allEmployees);
         // when then

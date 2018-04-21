@@ -9,11 +9,11 @@ databaseChangeLog:
           sequenceName: hibernate_sequence
           startValue: 5
    - changeSet:
-      id: createEmplyeTable
+      id: createEmployeeTable
       author: phil-pona
       changes:
         - createTable:
-            tableName: employe
+            tableName: employee
             columns:
               - column:
                   name: id
@@ -34,8 +34,20 @@ databaseChangeLog:
               - column:
                   name: first_name
                   type: varchar(100)
+                  constraints:
+                    nullable: false
               - column:
                   name: last_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: username
                   type: varchar(100)
                   constraints:
                     nullable: false
