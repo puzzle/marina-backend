@@ -31,19 +31,18 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
     @Value("${security.enable-csrf}")
     private boolean csrfEnabled;
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		if (!csrfEnabled) {
-			http.csrf().disable();
-		}
-		http
-	      .antMatcher("/**")
-	      .authorizeRequests()
-	      .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/**").permitAll()
-	        .antMatchers("/", "/login**", "/webjars/**", "/actuator/health")
-	        .permitAll()
-	      .anyRequest()
-	        .authenticated();
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        if (!csrfEnabled) {
+            http = http.csrf().disable();
+        }
+        http
+                .antMatcher("/**")
+                .authorizeRequests()
+                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/**").permitAll()
+                .antMatchers("/", "/login**", "/webjars/**", "/actuator/health").permitAll()
+                .anyRequest()
+                .authenticated();
 
-	}
+    }
 }
