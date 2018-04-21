@@ -16,17 +16,17 @@ import org.springframework.web.context.request.RequestContextListener;
 @EnableOAuth2Sso
 public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MarinaBackendApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MarinaBackendApplication.class, args);
+    }
 
-	@Bean
-	@Order(0)
-	public RequestContextListener requestContextListener() {
-		return new RequestContextListener();
-	}
-	
-	@Value("${security.enable-csrf}")
+    @Bean
+    @Order(0)
+    public RequestContextListener requestContextListener() {
+        return new RequestContextListener();
+    }
+
+    @Value("${security.enable-csrf}")
     private boolean csrfEnabled;
 
     @Override
@@ -36,6 +36,6 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
         }
 
         http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/webjars/**").permitAll().anyRequest()
-		.authenticated();
+                .authenticated();
     }
 }

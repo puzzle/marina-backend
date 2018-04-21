@@ -8,5 +8,5 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("application-test.yml")
 public class TestConfiguration {
-	
+
 }

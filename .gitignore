@@ -3,6 +3,7 @@
 
 .gradle
 /build/
+/out/
 !gradle/wrapper/gradle-wrapper.jar
 
 ### STS ###
@@ -16,7 +17,11 @@
 /bin/
 
 ### IntelliJ IDEA ###
-.idea
+.idea/workspace.xml
+.idea/libraries
+.idea/modules
+.idea/modules.xml
+
 *.iws
 *.iml
 *.ipr

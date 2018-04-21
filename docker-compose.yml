@@ -15,7 +15,7 @@ services:
      - "8080:8080"
     links:
      - postgresqldb
-     
+
   postgresqldb:
     image: "centos/postgresql-96-centos7"
     environment:
@@ -24,7 +24,18 @@ services:
       - POSTGRESQL_DATABASE=marina
     volumes:
       - 'posgresql-data:/var/lib/pgsql/data'
-      
+
+  postgresql-localdev:
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    image: "centos/postgresql-96-centos7"
+    environment:
+      - POSTGRESQL_USER=marina
+      - POSTGRESQL_PASSWORD=marina
+      - POSTGRESQL_DATABASE=marina
+    volumes:
+      - 'posgresql-data:/var/lib/pgsql/data'
+
 volumes:
   posgresql-data:
-    

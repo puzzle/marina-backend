@@ -1,42 +1,46 @@
 package ch.puzzle.marinabackend.employe;
 
-import java.math.BigDecimal;
+import ch.puzzle.marinabackend.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
-import ch.puzzle.marinabackend.AbstractEntity;
-
+import java.math.BigDecimal;
 
 @Entity
-public class Employe extends AbstractEntity{
-    public Employe() {}
-	
-    @Column(name = "first_name")
-	private String firstName;
-    
-    @Column(name = "last_name")
-	private String lastName;
-    
-    @Column(name = "brutto_salary")
-	private BigDecimal bruttoSalary;
+public class Employe extends AbstractEntity {
+    public Employe() {
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public BigDecimal getBruttoSalary() {
-		return bruttoSalary;
-	}
-	public void setBruttoSalary(BigDecimal bruttoSalary) {
-		this.bruttoSalary = bruttoSalary;
-	}
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "brutto_salary")
+    private BigDecimal bruttoSalary;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public BigDecimal getBruttoSalary() {
+        return bruttoSalary;
+    }
+
+    public void setBruttoSalary(BigDecimal bruttoSalary) {
+        this.bruttoSalary = bruttoSalary;
+    }
 }

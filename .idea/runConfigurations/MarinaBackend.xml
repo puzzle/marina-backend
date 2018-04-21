@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MarinaBackend" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="marina-backend_main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ch.puzzle.marinabackend.MarinaBackendApplication" />
+    <option name="DEBUG_MODE" value="true" />
+    <option name="ACTIVE_PROFILES" value="local" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method />
+  </configuration>
+</component>

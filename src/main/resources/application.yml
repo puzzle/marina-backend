@@ -1,8 +1,8 @@
-#Use application.properties only for default values, use Environment Variables to configure the application
+# Use application.properties only for default values, use Environment Variables to configure the application
 
 # Postgresql DB default Values
 spring:
-   database: 
+   database:
       driverClassName: org.postgresql.Driver
    datasource:
       url: jdbc:postgresql://localhost:5432/marina
@@ -14,10 +14,10 @@ security:
     password: password
   oauth2:
     client:
-      clientId: 
-      clientSecret: 
-      accessTokenUri: 
-      userAuthorizationUri: 
+      clientId:
+      clientSecret:
+      accessTokenUri:
+      userAuthorizationUri:
       tokenName: access_token
       authenticationScheme: header
       clientAuthenticationScheme: header

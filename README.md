@@ -41,6 +41,12 @@ persistent Volume attached
 docker run -d -e POSTGRESQL_USER=marina -e POSTGRESQL_PASSWORD=marina -e POSTGRESQL_DATABASE=marina -p 5432:5432 -v /host/db/path:/var/lib/pgsql/data centos/postgresql-96-centos7
 ```
 
+or run the pre-configured docker-compose command:
+
+```bash
+docker-compose up -d postgresql-localdev
+```
+
 ### OAuth
 
 configure secret values to your oauth integration via Environment variables
@@ -54,6 +60,20 @@ SECURITY_OAUTH2_CLIENT_TOKENNAME: access_token
 SECURITY_OAUTH2_CLIENT_AUTHENTICATIONSCHEME: header
 SECURITY_OAUTH2_CLIENT_CLIENTAUTHENTICATIONSCHEME: header
 SECURITY_OAUTH2_RESOURCE_USERINFOURI
+```
+
+or, if you use the IntelliJ Run Configuration, create a file named `src/main/resources/application-local.properties`
+and set the following values:
+
+```text
+security.oauth2.client.accesstokenuri=
+security.oauth2.client.clientid=
+security.oauth2.client.clientsecret=
+security.oauth2.client.userauthorizationuri=
+security.oauth2.resource.userinfouri=
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/marina
+
 ```
 
 ## Deploy to OpenShift
