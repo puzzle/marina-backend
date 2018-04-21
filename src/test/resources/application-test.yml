@@ -1,5 +1,9 @@
 #Use application.properties only for default values, use Environment Variables to configure the application
 
+server:
+  servlet:
+    contextPath: /api
+
 # Postgresql DB default Values
 spring:
    datasource:
