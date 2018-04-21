@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import ch.puzzle.marinabackend.security.SecurityService;
 import ch.puzzle.marinabackend.security.User;
 
 @RestController
@@ -29,6 +29,9 @@ public class EmployeeResource {
 
     @Autowired
     private EmployeeRepository employeRepository;
+    
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping("/employees")
     public Iterable<Employee> getEmployees() {
@@ -81,10 +84,14 @@ public class EmployeeResource {
     }
     @PostMapping("/employees/user")
     public ResponseEntity<Object> createEmployeByPrincipal(Principal principal) {
-        OAuth2Authentication auth = (OAuth2Authentication) principal;
-        Employee savedEmploye = employeRepository.save(new Employee(new User(auth)));
+        User convertPrincipal = securityService.convertPrincipal(principal);
+        if (convertPrincipal == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        Employee savedEmploye = employeRepository.save(new Employee());
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().replacePath("/employees/{id}")
                 .buildAndExpand(savedEmploye.getId()).toUri();
 
         return ResponseEntity.created(location).build();

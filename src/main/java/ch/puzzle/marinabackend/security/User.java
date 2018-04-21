@@ -1,11 +1,5 @@
 package ch.puzzle.marinabackend.security;
 
-import java.util.HashMap;
-
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-
 public class User {
     
     private String id;
@@ -14,19 +8,6 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
-    
-    public User(OAuth2Authentication auth) {
-        super();
-        UsernamePasswordAuthenticationToken userAuthentication = (UsernamePasswordAuthenticationToken)auth.getUserAuthentication();
-        OAuth2AuthenticationDetails authDetails = (OAuth2AuthenticationDetails)auth.getDetails();
-        HashMap<String,String> details = (HashMap<String,String>)userAuthentication.getDetails();
-        this.id = details.get("sub");
-        this.bearerToken = authDetails.getTokenValue();
-        this.username = details.get("preferred_username");
-        this.email = details.get("email");;
-        this.firstName = details.get("given_name");;
-        this.lastName = details.get("family_name");;
-    }
 
     public String getId() {
         return id;

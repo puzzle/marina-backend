@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +36,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.puzzle.marinabackend.MarinaBackendApplication;
 import ch.puzzle.marinabackend.TestConfiguration;
-import ch.puzzle.marinabackend.employee.EmployeeRepository;
-import ch.puzzle.marinabackend.employee.Employee;
+import ch.puzzle.marinabackend.security.SecurityService;
+import ch.puzzle.marinabackend.security.SecurityTestUtils;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { MarinaBackendApplication.class,
@@ -47,6 +48,9 @@ public class EmployeeResourceTest {
 
 	@Autowired
 	private MockMvc mvc;
+	
+	@MockBean
+    private SecurityService securityService;
 
 
 	@MockBean
@@ -141,6 +145,33 @@ public class EmployeeResourceTest {
 				.andExpect(status().isCreated())
 				.andExpect(redirectedUrlPattern("http://*/employees/" + housi.getId().toString()));
 	}
+	
+	@Test
+    @WithMockUser(username = "admin", roles = { "ADMIN" }) 
+    public void shouldCreateEmployeByPrincipal() throws Exception {
+        // given
+        when(securityService.convertPrincipal(any(Principal.class))).thenReturn(SecurityTestUtils.getTestUser());
+        when(employeRepository.save(any(Employee.class))).thenReturn(housi);
+
+        // when then
+        mvc.perform(post("/employees/user")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(redirectedUrlPattern("http://*/employees/" + housi.getId().toString()));
+    }
+	
+	@Test
+    @WithMockUser(username = "admin", roles = { "ADMIN" }) 
+    public void shouldCreateEmployeByPrincipal_notfound() throws Exception {
+        // given
+        when(securityService.convertPrincipal(any(Principal.class))).thenReturn(null);
+        when(employeRepository.save(any(Employee.class))).thenReturn(housi);
+
+        // when then
+        mvc.perform(post("/employees/user")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 
 	@Test
 	@WithMockUser(username = "admin", roles = { "ADMIN" }) 
