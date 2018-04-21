@@ -1,14 +1,22 @@
 package ch.puzzle.marinabackend.employee;
 
-import ch.puzzle.marinabackend.AbstractEntity;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.math.BigDecimal;
+
+import ch.puzzle.marinabackend.AbstractEntity;
+import ch.puzzle.marinabackend.security.User;
 
 @Entity
 public class Employee extends AbstractEntity {
     public Employee() {
+    }
+    public Employee(User u) {
+        firstName = u.getFirstName();
+        lastName = u.getLastName();
+        email = u.getEmail();
+        username = u.getUsername();
     }
 
     @Column(name = "first_name")

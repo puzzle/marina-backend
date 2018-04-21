@@ -29,3 +29,5 @@ security:
     resource:
       userInfoUri:
   enable-csrf: false
+  redirecturl: 
+     frontend: /

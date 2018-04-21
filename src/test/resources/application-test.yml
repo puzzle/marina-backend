@@ -29,6 +29,8 @@ security:
     authorization:
       checkTokenAccess: isAuthenticated()
   enable-csrf: false
+  redirecturl: 
+     frontend: /
      
 logging:
   level:
