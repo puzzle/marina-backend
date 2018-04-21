@@ -62,18 +62,27 @@ SECURITY_OAUTH2_CLIENT_CLIENTAUTHENTICATIONSCHEME: header
 SECURITY_OAUTH2_RESOURCE_USERINFOURI
 ```
 
-or, if you use the IntelliJ Run Configuration, create a file named `src/main/resources/application-local.properties`
+or, if you use the IntelliJ Run Configuration, create a file named `src/main/resources/application-local.yml`
 and set the following values:
 
 ```text
-security.oauth2.client.accesstokenuri=
-security.oauth2.client.clientid=
-security.oauth2.client.clientsecret=
-security.oauth2.client.userauthorizationuri=
-security.oauth2.resource.userinfouri=
+security:
+  oauth2:
+    client:
+      access-token-uri: 
+      client-id: 
+      client-secret: 
+      user-authorization-uri: 
+    resource:
+      user-info-uri: 
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/marina
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/marina
 
+cors:
+  enable: true
+  allow-origin: http://localhost:3000
 ```
 
 ## Deploy to OpenShift

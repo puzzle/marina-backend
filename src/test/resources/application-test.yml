@@ -1,4 +1,4 @@
-#Use application.properties only for default values, use Environment Variables to configure the application
+#Use application.yml only for default values, use Environment Variables to configure the application
 
 server:
   servlet:
@@ -29,9 +29,12 @@ security:
     authorization:
       checkTokenAccess: isAuthenticated()
   enable-csrf: false
-  redirecturl: 
+  redirecturl:
      frontend: /
-     
+  cors:
+    enable: true
+    allow-origin: "*"
+
 logging:
   level:
     org:

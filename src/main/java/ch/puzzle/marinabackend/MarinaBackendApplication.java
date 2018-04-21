@@ -7,8 +7,10 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.context.request.RequestContextListener;
 
@@ -30,6 +32,11 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
 
     @Value("${security.enable-csrf}")
     private boolean csrfEnabled;
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(HttpMethod.OPTIONS);
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

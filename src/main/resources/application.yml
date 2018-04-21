@@ -1,4 +1,4 @@
-# Use application.properties only for default values, use Environment Variables to configure the application
+# Use application.yml only for default values, use Environment Variables to configure the application
 
 server:
   servlet:
@@ -7,12 +7,20 @@ server:
 
 # Postgresql DB default Values
 spring:
-   database:
-      driverClassName: org.postgresql.Driver
-   datasource:
-      url: jdbc:postgresql://localhost:5432/marina
-      username: marina
-      password: marina
+  database:
+    driverClassName: org.postgresql.Driver
+  datasource:
+    url: jdbc:postgresql://localhost:5432/marina
+    username: marina
+    password: marina
+   # to get rid of the exception at startup, see https://github.com/spring-projects/spring-boot/issues/12007
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
 # Oauth Client configuration
 security:
   user:
@@ -29,5 +37,9 @@ security:
     resource:
       userInfoUri:
   enable-csrf: false
-  redirecturl: 
+  redirecturl:
      frontend: /
+  # Cross Origin Request Security configuration
+  cors:
+    enable: false
+    allow-origin:
