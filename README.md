@@ -87,6 +87,34 @@ cors:
 
 ## Deploy to OpenShift
 
+### Infrastructure setup
+
+create a build project
+
+We're going to set up the following infrastructure
+* build project, to build the images, images from build project will be promoted to the stage
+* dev
+* test
+* prod
+
+create the projects
+
+`oc new-project marina-build`
+`oc new-project marina-dev`
+`oc new-project marina-test`
+`oc new-project marina-prod`
+
+grant the build project access to the other projects
+oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n dev
+
+#### Setup build project
+
+* create new project with `oc new-project marina-build`
+* add docker build
+oc new-build https://github.com/puzzle/marina-backend.git --strategy=docker --name=marina-backend 
+
+### Setup Backend with postgresql db
+
 * create Project
 * add persistent Postgresql database
 * add to Project "Deploy Image" puzzle/marina-backend and configure the dc

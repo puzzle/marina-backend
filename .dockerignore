@@ -1,0 +1,12 @@
+/datastore-postgresql
+.classpath
+.dockerignore
+.git
+.gitignore
+.gradle
+.idea
+.project
+.settings
+.travis.yml
+settings.gradle
+/build
