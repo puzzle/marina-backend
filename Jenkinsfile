@@ -48,7 +48,8 @@ pipeline {
 						    }
 						    openshift.withProject("${params.dev_project}") {
 						        echo "Deploying to dev, Project: ${openshift.project()}"
-						        // TODO: remove image change trigger and trigger deployment here
+						        def deploySelector = openshift.selector("dc/marina-backend").rollout().latest()
+						        deploySelector.logs('-f')
 						        
 						    }
 						}
@@ -72,9 +73,10 @@ pipeline {
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:dev", "pitc-marina-build/marina-backend:test")
 						        
 						    }
-						    openshift.withProject("${params.dev_project}") {
+						    openshift.withProject("${params.test_project}") {
 						        echo "Deploying to test, Project: ${openshift.project()}"
-						        // TODO: remove image change trigger and trigger deployment here
+						        def deploySelector = openshift.selector("dc/marina-backend").rollout().latest()
+						        deploySelector.logs('-f')
 						        
 						    }
 						}
@@ -98,9 +100,10 @@ pipeline {
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:test", "pitc-marina-build/marina-backend:prod")
 						        
 						    }
-						    openshift.withProject("${params.dev_project}") {
+						    openshift.withProject("${params.prod_project}") {
 						        echo "Deploying to prod, Project: ${openshift.project()}"
-						        // TODO: remove image change trigger and trigger deployment here
+						        def deploySelector = openshift.selector("dc/marina-backend").rollout().latest()
+						        deploySelector.logs('-f')
 						        
 						    }
 						}
