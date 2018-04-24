@@ -131,7 +131,8 @@ oc new-build https://github.com/puzzle/marina-backend.git --strategy=docker --na
 ** prod `oc new-app marina-build/marina-backend:prod -n marina-prod` 
 * configure backend
 ** OAuth, Database, set resource limits
-** add healthchecks url /api/actuator/health, readyness initial delay 150, delay 5, lifeness initial delay 200, delay 5
+** add healthchecks url /api/actuator/health, readyness initial delay 150, delay 5, liveness initial delay 200, delay 5
+** disable image change trigger, so that we can trigger the deployment from the pipeline
 * add route to expose the backend
 ** path /api
 ** secure with redirect of unsecure traffic
