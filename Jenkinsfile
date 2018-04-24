@@ -12,6 +12,9 @@ pipeline {
         string(name: 'dev_project', defaultValue: 'pitc-marina-dev', description: 'The OpenShift Dev Project')
         string(name: 'test_project', defaultValue: 'pitc-marina-test', description: 'The OpenShift Test Project')
         string(name: 'prod_project', defaultValue: 'pitc-marina-prod', description: 'The OpenShift Prod Project')
+        
+        string(name: 'openshift_cluster', defaultValue: 'OpenShiftPuzzleProduction', description: 'The OpenShift Cluster')
+        string(name: 'openshift_cluster_token', defaultValue: 'openshiftv3_prod_token_client_plugin', description: 'The OpenShift Cluster')
     }
     stages {
         stage('Build') {
@@ -24,7 +27,7 @@ pipeline {
                 script{
                 	def ocDir = tool "oc"
                 	withEnv(["PATH+OC=${ocDir}/bin"]) {
-		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
+		                openshift.withCluster("${params.openshift_cluster}", "${params.openshift_cluster_token}" ) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Running in project: ${openshift.project()}"
 						        def buildSelector = openshift.startBuild("marina-backend")
@@ -40,7 +43,7 @@ pipeline {
                 script{
                 	def ocDir = tool "oc"
                 	withEnv(["PATH+OC=${ocDir}/bin"]) {
-		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
+		                openshift.withCluster("${params.openshift_cluster}", "${params.openshift_cluster_token}" ) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging dev, Project: ${openshift.project()}"
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:latest", "${params.build_project}/marina-backend:dev")
@@ -72,7 +75,7 @@ pipeline {
                 script{
                 	def ocDir = tool "oc"
                 	withEnv(["PATH+OC=${ocDir}/bin"]) {
-		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
+		                openshift.withCluster("${params.openshift_cluster}", "${params.openshift_cluster_token}" ) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging dev, Project: ${openshift.project()}"
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:dev", "pitc-marina-build/marina-backend:test")
@@ -103,7 +106,7 @@ pipeline {
                 script{
                 	def ocDir = tool "oc"
                 	withEnv(["PATH+OC=${ocDir}/bin"]) {
-		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
+		                openshift.withCluster("${params.openshift_cluster}", "${params.openshift_cluster_token}" ) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging dev, Project: ${openshift.project()}"
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:test", "pitc-marina-build/marina-backend:prod")
