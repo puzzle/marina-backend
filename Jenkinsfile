@@ -56,7 +56,7 @@ pipeline {
 				}
             }
         }
-        stage('Integration Tests') {
+        stage('Integration Tests Dev') {
             steps {
                 echo "Executing integration tests"
             }
@@ -82,7 +82,7 @@ pipeline {
 				}
             }
         }
-        stage('Integration Tests') {
+        stage('Integration Tests Test') {
             steps {
                 echo "Executing integration tests"
             }
