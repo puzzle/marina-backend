@@ -43,7 +43,7 @@ pipeline {
 		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging dev, Project: ${openshift.project()}"
-						        openshift.tag("marina-build/marina-backend:latest", "marina-build/marina-backend:dev")
+						        openshift.tag("${params.build_project}/marina-backend:latest", "pitc-marina-build/marina-backend:dev")
 						        
 						    }
 						    openshift.withProject(${params.dev_project}) {
@@ -69,7 +69,7 @@ pipeline {
 		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging dev, Project: ${openshift.project()}"
-						        openshift.tag("marina-build/marina-backend:dev", "marina-build/marina-backend:test")
+						        openshift.tag("${params.build_project}/marina-backend:dev", "pitc-marina-build/marina-backend:test")
 						        
 						    }
 						    openshift.withProject(${params.dev_project}) {
@@ -95,7 +95,7 @@ pipeline {
 		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging dev, Project: ${openshift.project()}"
-						        openshift.tag("marina-build/marina-backend:test", "marina-build/marina-backend:prod")
+						        openshift.tag("${params.build_project}/marina-backend:test", "pitc-marina-build/marina-backend:prod")
 						        
 						    }
 						    openshift.withProject(${params.dev_project}) {
