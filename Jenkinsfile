@@ -55,9 +55,7 @@ pipeline {
 								rc.untilEach(1){
 								     def rcMap = it.object()
 								     return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
-								}
-
-						        
+								}						        
 						    }
 						}
 					}
@@ -83,8 +81,12 @@ pipeline {
 						    openshift.withProject("${params.test_project}") {
 						        echo "Deploying to test, Project: ${openshift.project()}"
 						        def deploySelector = openshift.selector("dc/marina-backend").rollout().latest()
-						        
-						        
+						        def latestDeploymentVersion = openshift.selector('dc',"marina-backend").object().status.latestVersion
+								def rc = openshift.selector('rc', "marina-backend-${latestDeploymentVersion}")
+								rc.untilEach(1){
+								     def rcMap = it.object()
+								     return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+								}
 						    }
 						}
 					}
@@ -110,7 +112,12 @@ pipeline {
 						    openshift.withProject("${params.prod_project}") {
 						        echo "Deploying to prod, Project: ${openshift.project()}"
 						        def deploySelector = openshift.selector("dc/marina-backend").rollout().latest()
-						        
+						        def latestDeploymentVersion = openshift.selector('dc',"marina-backend").object().status.latestVersion
+								def rc = openshift.selector('rc', "marina-backend-${latestDeploymentVersion}")
+								rc.untilEach(1){
+								     def rcMap = it.object()
+								     return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+								}
 						    }
 						}
 					}
