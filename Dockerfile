@@ -11,6 +11,7 @@ EXPOSE 8080
 USER 1001
 
 COPY . /opt/app-root/src/
+RUN ls -la /opt/app-root/src/
 # build the application from source
 RUN sh /opt/app-root/src/gradlew build
 

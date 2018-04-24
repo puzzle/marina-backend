@@ -104,18 +104,30 @@ create the projects
 `oc new-project marina-test`
 `oc new-project marina-prod`
 
-grant the build project access to the other projects
-oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n dev
+give the puller serviceaccount from the stages access to the build project
+
+```
+oc project marina-dev
+oc policy add-role-to-group system:image-puller system:serviceaccounts:marina-build -n marina-build
+oc project marina-test
+oc policy add-role-to-group system:image-puller system:serviceaccounts:marina-build -n marina-build
+oc project marina-prod
+oc policy add-role-to-group system:image-puller system:serviceaccounts:marina-build -n marina-build
+```
 
 #### Setup build project
 
-* create new project with `oc new-project marina-build`
 * add docker build
 oc new-build https://github.com/puzzle/marina-backend.git --strategy=docker --name=marina-backend 
 
-### Setup Backend with postgresql db
+#### Setup Backend Dev
+* Create backend
+`oc new-app marina-build\marina-backend`
+
+#### Setup Backend with postgresql db
 
 * create Project
-* add persistent Postgresql database
-* add to Project "Deploy Image" puzzle/marina-backend and configure the dc
+* add persistent Postgresql database, and configure dc
+* `oc new-app marina-build\marina-backend:[stage]`
+* configure backend
 * add route to expose the backend
