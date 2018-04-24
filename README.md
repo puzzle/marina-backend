@@ -107,12 +107,9 @@ create the projects
 give the puller serviceaccount from the stages access to the build project
 
 ```
-oc project marina-dev
-oc policy add-role-to-group system:image-puller system:serviceaccounts:marina-build -n marina-build
-oc project marina-test
-oc policy add-role-to-group system:image-puller system:serviceaccounts:marina-build -n marina-build
-oc project marina-prod
-oc policy add-role-to-group system:image-puller system:serviceaccounts:marina-build -n marina-build
+oc policy add-role-to-group system:image-puller system:serviceaccounts:marina-dev -n marina-build
+oc policy add-role-to-group system:image-puller system:serviceaccounts:marina-test -n marina-build
+oc policy add-role-to-group system:image-puller system:serviceaccounts:marina-prod -n marina-build
 ```
 
 #### Setup build project
@@ -122,12 +119,30 @@ oc new-build https://github.com/puzzle/marina-backend.git --strategy=docker --na
 
 #### Setup Backend Dev
 * Create backend
-`oc new-app marina-build\marina-backend`
+`oc new-app marina-build/marina-backend:test`
 
 #### Setup Backend with postgresql db
 
 * create Project
 * add persistent Postgresql database, and configure dc
-* `oc new-app marina-build\marina-backend:[stage]`
+* Create Backend app
+** dev `oc new-app marina-build/marina-backend -n marina-dev`
+** test `oc new-app marina-build/marina-backend:test -n marina-test` 
+** prod `oc new-app marina-build/marina-backend:prod -n marina-prod` 
 * configure backend
+** OAuth, Database, set resource limits
+** add healthchecks url /api/actuator/health, readyness initial delay 150, delay 5, lifeness initial delay 200, delay 5
 * add route to expose the backend
+** path /api
+** secure with redirect of unsecure traffic
+
+### Tagging images and promoting to stage
+
+tag images in the build project accordingly, dev is always on latest.
+
+deploy the latest image to test:
+`oc tag marina-build/marina-backend:latest marina-build/marina-backend:test`
+
+deploy the latest test image to prod:
+`oc tag marina-build/marina-backend:test marina-build/marina-backend:prod`
+
