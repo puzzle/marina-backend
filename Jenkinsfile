@@ -25,7 +25,7 @@ pipeline {
                 	def ocDir = tool "oc"
                 	withEnv(["PATH+OC=${ocDir}/bin"]) {
 		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
-						    openshift.withProject(${params.build_project}) {
+						    openshift.withProject("${params.build_project}") {
 						        echo "Running in project: ${openshift.project()}"
 						        def buildSelector = openshift.startBuild("marina-backend")
 								buildSelector.logs('-f')
@@ -41,7 +41,7 @@ pipeline {
                 	def ocDir = tool "oc"
                 	withEnv(["PATH+OC=${ocDir}/bin"]) {
 		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
-						    openshift.withProject(${params.build_project}) {
+						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging dev, Project: ${openshift.project()}"
 						        openshift.tag("marina-build/marina-backend:latest", "marina-build/marina-backend:dev")
 						        
@@ -67,7 +67,7 @@ pipeline {
                 	def ocDir = tool "oc"
                 	withEnv(["PATH+OC=${ocDir}/bin"]) {
 		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
-						    openshift.withProject(${params.build_project}) {
+						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging dev, Project: ${openshift.project()}"
 						        openshift.tag("marina-build/marina-backend:dev", "marina-build/marina-backend:test")
 						        
@@ -93,7 +93,7 @@ pipeline {
                 	def ocDir = tool "oc"
                 	withEnv(["PATH+OC=${ocDir}/bin"]) {
 		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
-						    openshift.withProject(${params.build_project}) {
+						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging dev, Project: ${openshift.project()}"
 						        openshift.tag("marina-build/marina-backend:test", "marina-build/marina-backend:prod")
 						        
