@@ -12,7 +12,7 @@ USER 1001
 
 COPY src /opt/app-root/src/src
 COPY gradle /opt/app-root/src/gradle
-COPY build.gradle gradlew /opt/app-root/src/
+COPY build.gradle gradlew settings.gradle /opt/app-root/src/
 # build the application from source
 RUN sh /opt/app-root/src/gradlew build
 

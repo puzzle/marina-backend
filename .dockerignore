@@ -8,5 +8,4 @@
 .project
 .settings
 .travis.yml
-settings.gradle
 /build
