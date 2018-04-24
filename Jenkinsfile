@@ -43,10 +43,10 @@ pipeline {
 		                openshift.withCluster('OpenShiftPuzzleProduction', 'openshiftv3_prod_token_client_plugin' ) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging dev, Project: ${openshift.project()}"
-						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:latest", "pitc-marina-build/marina-backend:dev")
+						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:latest", "${params.build_project}/marina-backend:dev")
 						        
 						    }
-						    openshift.withProject(${params.dev_project}) {
+						    openshift.withProject("${params.dev_project}") {
 						        echo "Deploying to dev, Project: ${openshift.project()}"
 						        // TODO: remove image change trigger and trigger deployment here
 						        
@@ -72,8 +72,8 @@ pipeline {
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:dev", "pitc-marina-build/marina-backend:test")
 						        
 						    }
-						    openshift.withProject(${params.dev_project}) {
-						        echo "Deploying to dev, Project: ${openshift.project()}"
+						    openshift.withProject("${params.dev_project}") {
+						        echo "Deploying to test, Project: ${openshift.project()}"
 						        // TODO: remove image change trigger and trigger deployment here
 						        
 						    }
@@ -98,8 +98,8 @@ pipeline {
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:test", "pitc-marina-build/marina-backend:prod")
 						        
 						    }
-						    openshift.withProject(${params.dev_project}) {
-						        echo "Deploying to dev, Project: ${openshift.project()}"
+						    openshift.withProject("${params.dev_project}") {
+						        echo "Deploying to prod, Project: ${openshift.project()}"
 						        // TODO: remove image change trigger and trigger deployment here
 						        
 						    }
