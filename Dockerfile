@@ -20,5 +20,4 @@ USER 1001
 
 RUN mv /opt/app-root/src/build/libs/*.jar /opt/app-root/marina-backend.jar 
 
-CMD java -Xmx1024m -Xss1024k -jar /opt/app-root/marina-backend.jar
-
+CMD ["java", "-Xmx1024m", "-Xss1024k", "-jar", "/opt/app-root/marina-backend.jar"]
