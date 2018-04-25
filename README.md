@@ -99,10 +99,10 @@ We're going to set up the following infrastructure
 
 create the projects
 
-`oc new-project marina-build`
-`oc new-project marina-dev`
-`oc new-project marina-test`
-`oc new-project marina-prod`
+* `oc new-project marina-build`
+* `oc new-project marina-dev`
+* `oc new-project marina-test`
+* `oc new-project marina-prod`
 
 give the puller serviceaccount from the stages access to the build project
 
@@ -114,28 +114,26 @@ oc policy add-role-to-group system:image-puller system:serviceaccounts:marina-pr
 
 #### Setup build project
 
-* add docker build
-oc new-build https://github.com/puzzle/marina-backend.git --strategy=docker --name=marina-backend 
+* add docker build: `oc new-build https://github.com/puzzle/marina-backend.git --strategy=docker --name=marina-backend`
 
 #### Setup Backend Dev
-* Create backend
-`oc new-app marina-build/marina-backend:test`
+* Create backend: `oc new-app marina-build/marina-backend:test`
 
 #### Setup Backend with postgresql db
 
 * create Project
 * add persistent Postgresql database, and configure dc
 * Create Backend app
-** dev `oc new-app marina-build/marina-backend -n marina-dev`
-** test `oc new-app marina-build/marina-backend:test -n marina-test` 
-** prod `oc new-app marina-build/marina-backend:prod -n marina-prod` 
+  * dev `oc new-app marina-build/marina-backend -n marina-dev`
+  * test `oc new-app marina-build/marina-backend:test -n marina-test` 
+  * prod `oc new-app marina-build/marina-backend:prod -n marina-prod` 
 * configure backend
-** OAuth, Database, set resource limits
-** add healthchecks url /api/actuator/health, readyness initial delay 150, delay 5, liveness initial delay 200, delay 5
-** disable image change trigger, so that we can trigger the deployment from the pipeline
+  * OAuth, Database, set resource limits
+  * add healthchecks url /api/actuator/health, readyness initial delay 150, delay 5, liveness initial delay 200, delay 5
+  * disable image change trigger, so that we can trigger the deployment from the pipeline
 * add route to expose the backend
-** path /api
-** secure with redirect of unsecure traffic
+  * path /api
+  * secure with redirect of unsecure traffic
 
 ### Tagging images and promoting to stage
 
