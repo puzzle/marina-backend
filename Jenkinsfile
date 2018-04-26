@@ -102,6 +102,10 @@ pipeline {
             }
         }
         stage('Deploy to Prod') {
+        	when {
+                // Only on master branch
+                expression { env.BRANCH_NAME == 'master' }
+            }
             steps {
                 script{
                 	def ocDir = tool "oc"
