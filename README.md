@@ -116,15 +116,12 @@ oc policy add-role-to-group system:image-puller system:serviceaccounts:marina-pr
 
 * add docker build: `oc new-build https://github.com/puzzle/marina-backend.git --strategy=docker --name=marina-backend`
 
-#### Setup Backend Dev
-* Create backend: `oc new-app marina-build/marina-backend:test`
-
 #### Setup Backend with postgresql db
 
 * create Project
 * add persistent Postgresql database, and configure dc
 * Create Backend app
-  * dev `oc new-app marina-build/marina-backend -n marina-dev`
+  * dev `oc new-app marina-build/marina-backend:dev -n marina-dev`
   * test `oc new-app marina-build/marina-backend:test -n marina-test` 
   * prod `oc new-app marina-build/marina-backend:prod -n marina-prod` 
 * configure backend
