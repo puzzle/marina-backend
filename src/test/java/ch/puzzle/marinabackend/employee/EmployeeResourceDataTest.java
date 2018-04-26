@@ -100,6 +100,32 @@ public class EmployeeResourceDataTest {
         assertEquals(ResponseEntity.notFound().build(), result);
         
     }
+	
+	@Test
+    public void shouldNotFindAgreementOnEmployee() throws Exception {
+        //given
+        Employee employee = new Employee();
+        employee.setFirstName("Housi");
+        employee.setLastName("Mousi");
+        employee.setEmail("housi.mousi@marina.ch");
+        employee.setUsername("hmousi");
+        employee.setBruttoSalary(BigDecimal.valueOf(1000.45));
+        
+        Agreement a = new Agreement();
+        a.setEmployee(employee);
+        a.setAgreementPdfPath("a path");
+        employee.setAgreement(a);
+        entityManager.persist(employee);
+        entityManager.persist(a);
+        entityManager.flush();
+
+        //when
+        ResponseEntity<Resource<Employee>> result = employeeResource.getEmploye(employee.getId());
+
+        //then
+        assertEquals(employee, result.getBody().getContent());
+        
+    }
         
 
 }

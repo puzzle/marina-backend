@@ -1,14 +1,23 @@
 package ch.puzzle.marinabackend.employee;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import ch.puzzle.marinabackend.AbstractEntity;
 import ch.puzzle.marinabackend.security.User;
 
 @Entity
+@Table(name = "employee")
 public class Employee extends AbstractEntity {
     public Employee() {
     }
@@ -33,6 +42,22 @@ public class Employee extends AbstractEntity {
 
     @Column(name = "brutto_salary")
     private BigDecimal bruttoSalary;
+    
+    @Column(name = "validated_at_date")
+    private LocalDateTime validatedAt;
+    
+    @OneToOne
+    @JoinColumn(name = "agreement_id")
+    @RestResource(path = "employeeAgreement", rel="agreement")
+    private Agreement agreement;
+    
+    @OneToOne
+    @JoinColumn(name = "current_configuration_id")
+    @RestResource(path = "employeeCurrentConfiguration", rel="currentConfiguration")
+    private CurrentConfiguration currentConfiguration;
+    
+    @OneToMany(mappedBy = "employee")
+    private List<MonthlyPayout> monthlyPayouts;
 
     public String getFirstName() {
         return firstName;
@@ -72,5 +97,29 @@ public class Employee extends AbstractEntity {
 
     public void setBruttoSalary(BigDecimal bruttoSalary) {
         this.bruttoSalary = bruttoSalary;
+    }
+    public LocalDateTime getValidatedAt() {
+        return validatedAt;
+    }
+    public void setValidatedAt(LocalDateTime validatedAt) {
+        this.validatedAt = validatedAt;
+    }
+    public Agreement getAgreement() {
+        return agreement;
+    }
+    public void setAgreement(Agreement agreement) {
+        this.agreement = agreement;
+    }
+    public CurrentConfiguration getCurrentConfiguration() {
+        return currentConfiguration;
+    }
+    public void setCurrentConfiguration(CurrentConfiguration currentConfiguration) {
+        this.currentConfiguration = currentConfiguration;
+    }
+    public List<MonthlyPayout> getMonthlyPayouts() {
+        return monthlyPayouts;
+    }
+    public void setMonthlyPayouts(List<MonthlyPayout> monthlyPayouts) {
+        this.monthlyPayouts = monthlyPayouts;
     }
 }

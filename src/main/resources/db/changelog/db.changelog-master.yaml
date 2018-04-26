@@ -9,9 +9,73 @@ databaseChangeLog:
           sequenceName: hibernate_sequence
           startValue: 5
    - changeSet:
-      id: createEmployeeTable
+      id: createInitialModel
       author: phil-pona
       changes:
+        - createTable:
+            tableName: agreement
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: DATETIME
+              - column:
+                  name: modified_date
+                  type: DATETIME
+              - column:
+                  name: version
+                  type: INT
+              - column:
+                  name: agreement_pdf_path
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: current_configuration
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: DATETIME
+              - column:
+                  name: modified_date
+                  type: DATETIME
+              - column:
+                  name: version
+                  type: INT
+              - column:
+                  name: amount_chf
+                  type: decimal
+              - column:
+                  name: wallet_type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: current_address
+                  type: varchar(200)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: bip32_node
+                  type: varchar(256)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: current_address_index
+                  type: BIGINT
         - createTable:
             tableName: employee
             columns:
@@ -54,3 +118,85 @@ databaseChangeLog:
               - column:
                   name: brutto_salary
                   type: decimal
+              - column:
+                  name: validated_at_date
+                  type: DATETIME
+              - column:
+                  name: agreement_id
+                  type: BIGINT
+              - column:
+                  name: current_configuration_id
+                  type: BIGINT
+        - addForeignKeyConstraint:
+            baseColumnNames: agreement_id
+            baseTableName: employee
+            constraintName: fk_employee_agreement
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: agreement
+        - addForeignKeyConstraint:
+            baseColumnNames: current_configuration_id
+            baseTableName: employee
+            constraintName: fk_employee_current_config
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: current_configuration
+        - createTable:
+            tableName: monthly_payout
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: DATETIME
+              - column:
+                  name: modified_date
+                  type: DATETIME
+              - column:
+                  name: version
+                  type: INT
+              - column:
+                  name: employee_id
+                  type: BIGINT
+              - column:
+                  name: year
+                  type: INT
+              - column:
+                  name: month
+                  type: INT
+              - column:
+                  name: amount_chf
+                  type: decimal
+              - column:
+                  name: amount_btc
+                  type: BIGINT
+              - column:
+                  name: rate_chf
+                  type: decimal
+              - column:
+                  name: payment_date
+                  type: DATETIME
+              - column:
+                  name: public_address
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address_index
+                  type: BIGINT
+        - addForeignKeyConstraint:
+            baseColumnNames: employee_id
+            baseTableName: monthly_payout
+            constraintName: fk_monthly_payout_employee
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: employee
+              
