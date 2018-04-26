@@ -77,7 +77,7 @@ pipeline {
                 	withEnv(["PATH+OC=${ocDir}/bin"]) {
 		                openshift.withCluster("${params.openshift_cluster}", "${params.openshift_cluster_token}" ) {
 						    openshift.withProject("${params.build_project}") {
-						        echo "Tagging dev, Project: ${openshift.project()}"
+						        echo "Tagging test, Project: ${openshift.project()}"
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:dev", "pitc-marina-build/marina-backend:test")
 						        
 						    }
@@ -108,7 +108,7 @@ pipeline {
                 	withEnv(["PATH+OC=${ocDir}/bin"]) {
 		                openshift.withCluster("${params.openshift_cluster}", "${params.openshift_cluster_token}" ) {
 						    openshift.withProject("${params.build_project}") {
-						        echo "Tagging dev, Project: ${openshift.project()}"
+						        echo "Tagging prod, Project: ${openshift.project()}"
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:test", "pitc-marina-build/marina-backend:prod")
 						        
 						    }
