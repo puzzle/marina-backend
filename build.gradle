@@ -15,12 +15,31 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
+def getVersionName = { -> 
+	if (System.getenv( 'OPENSHIFT_BUILD_COMMIT' )  != null) {
+		return System.getenv( 'OPENSHIFT_BUILD_COMMIT' ) 
+	} else if(System.getenv( 'BUILD_NUMBER' ) != null){
+		return System.getenv( 'BUILD_NUMBER' )
+	}
+	return "SNAPSHOT"
+}
+
 group = 'ch.puzzle'
-//version = '0.0.1-SNAPSHOT'
+version = '0.0.1-' +getVersionName()
 sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+}
+
+bootJar {
+	    manifest {
+	        attributes 'Implementation-Title': project.name,
+	                   'Implementation-Version': version,
+	                   'Implementation-Timestamp': new Date(),
+	                   'Jenkins-buildnumber' : (System.getenv( 'BUILD_NUMBER' )== null) ? "none" : System.getenv( 'BUILD_NUMBER' ),
+	                   'OpenShift-build-commit' : (System.getenv( 'OPENSHIFT_BUILD_COMMIT' )== null) ? "none" : System.getenv( 'OPENSHIFT_BUILD_COMMIT' )
+	    }
 }
 
 dependencies {

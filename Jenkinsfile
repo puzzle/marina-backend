@@ -30,7 +30,9 @@ pipeline {
 		                openshift.withCluster("${params.openshift_cluster}", "${params.openshift_cluster_token}" ) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Running in project: ${openshift.project()}"
-						        def buildSelector = openshift.startBuild("marina-backend")
+						        // get current commit and use it as build input
+						        def shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+						        def buildSelector = openshift.startBuild("marina-backend","--commit="+shortCommit)
 								buildSelector.logs('-f')
 						    }
 						}
