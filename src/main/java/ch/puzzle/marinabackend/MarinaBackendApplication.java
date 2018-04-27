@@ -47,7 +47,7 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
                 .antMatcher("/**")
                 .authorizeRequests()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/**").permitAll()
-                .antMatchers("/", "/login**", "/webjars/**", "/actuator/health").permitAll()
+                .antMatchers("/", "/login**", "/webjars/**", "/actuator/health", "/applicationinfo").permitAll()
                 .anyRequest()
                 .authenticated();
 
