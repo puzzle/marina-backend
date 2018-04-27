@@ -134,13 +134,13 @@ pipeline {
     }
     post {
         success {
-        	rocketSend avatar: 'https://chat.puzzle.ch/emoji-custom/success.png', channel: 'lightning', message: "Deployment success - Branch ${env.BRANCH_NAME} - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", rawMessage: true
+        	rocketSend avatar: 'https://chat.puzzle.ch/emoji-custom/success.png', channel: 'pitc-marina', message: "Deployment success - Branch ${env.BRANCH_NAME} - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", rawMessage: true
         }
         unstable {
-            rocketSend avatar: 'https://chat.puzzle.ch/emoji-custom/unstable.png', channel: 'lightning', message: "Deployment unstable - Branch ${env.BRANCH_NAME} - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", rawMessage: true
+            rocketSend avatar: 'https://chat.puzzle.ch/emoji-custom/unstable.png', channel: 'pitc-marina', message: "Deployment unstable - Branch ${env.BRANCH_NAME} - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", rawMessage: true
         }
         failure {
-            rocketSend avatar: 'https://chat.puzzle.ch/emoji-custom/failure.png', channel: 'lightning', message: "Deployment failure - Branch ${env.BRANCH_NAME} - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", rawMessage: true
+            rocketSend avatar: 'https://chat.puzzle.ch/emoji-custom/failure.png', channel: 'pitc-marina', message: "Deployment failure - Branch ${env.BRANCH_NAME} - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", rawMessage: true
         }
     }
 }
