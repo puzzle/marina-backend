@@ -134,13 +134,13 @@ pipeline {
     }
     post {
         success {
-            echo 'Success'
+        	rocketSend avatar: 'https://chat.puzzle.ch/emoji-custom/success.png', channel: 'lightning', message: "Deployment success - Branch ${env.BRANCH_NAME} - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", rawMessage: true
         }
         unstable {
-            echo 'Unstable'
+            rocketSend avatar: 'https://chat.puzzle.ch/emoji-custom/unstable.png', channel: 'lightning', message: "Deployment unstable - Branch ${env.BRANCH_NAME} - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", rawMessage: true
         }
         failure {
-            echo 'Error'
+            rocketSend avatar: 'https://chat.puzzle.ch/emoji-custom/failure.png', channel: 'lightning', message: "Deployment failure - Branch ${env.BRANCH_NAME} - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", rawMessage: true
         }
     }
 }
