@@ -10,6 +10,8 @@ RUN INSTALL_PKGS="tar unzip bc which lsof java-1.8.0-openjdk java-1.8.0-openjdk-
 EXPOSE 8080
 USER 1001
 
+RUN env
+
 COPY src /opt/app-root/src/src
 COPY gradle /opt/app-root/src/gradle
 COPY build.gradle gradlew settings.gradle /opt/app-root/src/
