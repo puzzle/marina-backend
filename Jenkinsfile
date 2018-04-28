@@ -33,8 +33,8 @@ pipeline {
 						        // get current commit and use it as build input
 						        def shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
 						        def buildSelector = openshift.startBuild("marina-backend","--commit="+shortCommit, 
-						        "-e GIT_COMMIT="+shortCommit, '-e BUILD_NUMBER=${env.BUILD_NUMBER',
-						        '-e JOB_NAME=${env.JOB_NAME}', '-e BRANCH_NAME=${env.BRANCH_NAME}', '-e BUILD_URL=${env.BUILD_URL}')
+						        "-e GIT_COMMIT="+shortCommit, "-e BUILD_NUMBER=${env.BUILD_NUMBER}",
+						        "-e JOB_NAME=${env.JOB_NAME}", "-e BRANCH_NAME=${env.BRANCH_NAME}", "-e BUILD_URL=${env.BUILD_URL}")
 								buildSelector.logs('-f')
 						    }
 						}
