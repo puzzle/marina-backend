@@ -40,6 +40,7 @@ bootJar {
 	                   'Jenkins-buildnumber' : (System.getenv( 'BUILD_NUMBER' )== null) ? "none" : System.getenv( 'BUILD_NUMBER' ),
 	                   'Buildjob-name' : (System.getenv( 'JOB_NAME' )== null) ? "none" : System.getenv( 'JOB_NAME' ),
 	                   'Buildjob-url' : (System.getenv( 'BUILD_URL' )== null) ? "none" : System.getenv( 'BUILD_URL' ),
+	                   'Git-repourl' : (System.getenv( 'GIT_REPO_URL' )== null) ? "none" : System.getenv( 'GIT_REPO_URL' ),
 	                   'Git-commit' : (System.getenv( 'GIT_COMMIT' )== null) ? "none" : System.getenv( 'GIT_COMMIT' ),
 	                   'Git-branch' : (System.getenv( 'BRANCH_NAME' )== null) ? "none" : System.getenv( 'BRANCH_NAME' )
 	                   

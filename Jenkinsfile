@@ -32,8 +32,9 @@ pipeline {
 						        echo "Running in project: ${openshift.project()}"
 						        // get current commit and use it as build input
 						        def shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+						        def gitRepo = sh(returnStdout: true, script: 'git config remote.origin.url').trim()
 						        def buildSelector = openshift.startBuild("marina-backend","--commit="+shortCommit, 
-						        "-e GIT_COMMIT="+shortCommit, "-e BUILD_NUMBER=${env.BUILD_NUMBER}",
+						        "-e GIT_REPO_URL="+gitRepo, "-e GIT_COMMIT="+shortCommit, "-e BUILD_NUMBER=${env.BUILD_NUMBER}",
 						        "-e JOB_NAME=${env.JOB_NAME}", "-e BRANCH_NAME=${env.BRANCH_NAME}", "-e BUILD_URL=${env.BUILD_URL}")
 								buildSelector.logs('-f')
 						    }
