@@ -51,7 +51,19 @@ public class ApplicationInfo {
         return jenkinsBuildnumber;
     }
 
-    public String getOpenShiftBuildCommit() {
+    public String getGitCommit() {
         return gitCommit;
+    }
+
+    public String getGitBranch() {
+        return gitBranch;
+    }
+
+    public String getBuildJobName() {
+        return buildJobName;
+    }
+
+    public String getBuildJobUrl() {
+        return buildJobUrl;
     }
 }
