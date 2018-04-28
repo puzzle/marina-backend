@@ -16,8 +16,8 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 def getVersionName = { -> 
-	if (System.getenv( 'OPENSHIFT_BUILD_COMMIT' )  != null) {
-		return System.getenv( 'OPENSHIFT_BUILD_COMMIT' ) 
+	if (System.getenv( 'GIT_COMMIT' )  != null) {
+		return System.getenv( 'GIT_COMMIT' ) 
 	} else if(System.getenv( 'BUILD_NUMBER' ) != null){
 		return System.getenv( 'BUILD_NUMBER' )
 	}
@@ -36,9 +36,13 @@ bootJar {
 	    manifest {
 	        attributes 'Implementation-Title': project.name,
 	                   'Implementation-Version': version,
-	                   'Implementation-Timestamp': new Date(),
+	                   'Implementation-Timestamp': new Date().format("dd.MM.yyy HH:mm:ss"),
 	                   'Jenkins-buildnumber' : (System.getenv( 'BUILD_NUMBER' )== null) ? "none" : System.getenv( 'BUILD_NUMBER' ),
-	                   'OpenShift-build-commit' : (System.getenv( 'OPENSHIFT_BUILD_COMMIT' )== null) ? "none" : System.getenv( 'OPENSHIFT_BUILD_COMMIT' )
+	                   'Buildjob-name' : (System.getenv( 'JOB_NAME' )== null) ? "none" : System.getenv( 'JOB_NAME' ),
+	                   'Buildjob-url' : (System.getenv( 'BUILD_URL' )== null) ? "none" : System.getenv( 'BUILD_URL' ),
+	                   'Git-commit' : (System.getenv( 'GIT_COMMIT' )== null) ? "none" : System.getenv( 'GIT_COMMIT' ),
+	                   'Git-branch' : (System.getenv( 'BRANCH_NAME' )== null) ? "none" : System.getenv( 'BRANCH_NAME' )
+	                   
 	    }
 }
 

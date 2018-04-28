@@ -11,7 +11,10 @@ public class ApplicationInfo {
     private String implementationVersion;
     private String implementationTimestamp;
     private String jenkinsBuildnumber;
-    private String openShiftBuildCommit;
+    private String gitCommit;
+    private String gitBranch;
+    private String buildJobName;
+    private String buildJobUrl;
     
     public ApplicationInfo() {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF");
@@ -26,7 +29,10 @@ public class ApplicationInfo {
         implementationTitle = MarinaBackendApplication.class.getPackage().getImplementationTitle();
         implementationTimestamp = prop.getProperty("Implementation-Timestamp", "none");
         jenkinsBuildnumber = prop.getProperty("Jenkins-buildnumber", "none");
-        openShiftBuildCommit = prop.getProperty("OpenShift-build-commit", "none");
+        buildJobName = prop.getProperty("Buildjob-name", "none");
+        buildJobUrl = prop.getProperty("Buildjob-url", "none");
+        gitCommit = prop.getProperty("Git-commit", "none");
+        gitBranch = prop.getProperty("Git-branch", "none");
     }
 
     public String getImplementationTitle() {
@@ -46,6 +52,6 @@ public class ApplicationInfo {
     }
 
     public String getOpenShiftBuildCommit() {
-        return openShiftBuildCommit;
+        return gitCommit;
     }
 }
