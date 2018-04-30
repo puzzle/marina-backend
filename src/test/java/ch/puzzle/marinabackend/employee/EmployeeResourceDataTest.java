@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -61,6 +62,7 @@ public class EmployeeResourceDataTest {
 	}
 	
 	@Test
+	@WithMockUser(username = "admin", roles = { "ADMIN" }) 
     public void shouldFindEmployeeByEmail() throws Exception {
         //given
         Employee employee = new Employee();
@@ -82,6 +84,7 @@ public class EmployeeResourceDataTest {
 	}
 	
 	@Test
+	@WithMockUser(username = "admin", roles = { "ADMIN" }) 
     public void shouldNotFindEmployeeByEmail() throws Exception {
         //given
         Employee employee = new Employee();
@@ -102,6 +105,7 @@ public class EmployeeResourceDataTest {
     }
 	
 	@Test
+	@WithMockUser(username = "admin", roles = { "ADMIN" }) 
     public void shouldNotFindAgreementOnEmployee() throws Exception {
         //given
         Employee employee = new Employee();

@@ -85,6 +85,29 @@ cors:
   allow-origin: http://localhost:3000
 ```
 
+#### Roles
+
+The following user roles are defined
+* ROLE_ADMIN
+* ROLE_USER (default role)
+
+To provide the roles via OAuthprovider the userinfo JSON needs to be altered with
+
+* roles or
+* client_roles property
+
+if the roles are available in the userinfo response, the client_roles are ignored
+
+In Keycloak we need then to define mappers on the client
+"User Realm Role" Mapper for the Realm Roles or the "User Client Role" Mapper for the client Roles in the Keycloak Client:
+ * Realm Role prefix: empty
+ * Multivalued: ON
+ * Token Claim Name: roles|client_roles
+ * Claim JSON Type: String
+ * Add to ID token: ON
+ * Add to access token: ON
+ * Add to userinfo: ON 
+
 ## Deploy to OpenShift
 
 ### Infrastructure setup

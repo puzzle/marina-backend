@@ -43,3 +43,4 @@ security:
   cors:
     enable: false
     allow-origin:
+    

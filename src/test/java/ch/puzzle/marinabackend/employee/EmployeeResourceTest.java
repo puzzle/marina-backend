@@ -147,7 +147,7 @@ public class EmployeeResourceTest {
 	}
 	
 	@Test
-    @WithMockUser(username = "admin", roles = { "ADMIN" }) 
+    @WithMockUser(username = "admin", roles = { "USER" }) 
     public void shouldCreateEmployeByPrincipal() throws Exception {
         // given
         when(securityService.convertPrincipal(any(Principal.class))).thenReturn(SecurityTestUtils.getTestUser());
@@ -161,7 +161,7 @@ public class EmployeeResourceTest {
     }
 	
 	@Test
-    @WithMockUser(username = "admin", roles = { "ADMIN" }) 
+    @WithMockUser(username = "admin", roles = { "USER" }) 
     public void shouldCreateEmployeByPrincipal_notfound() throws Exception {
         // given
         when(securityService.convertPrincipal(any(Principal.class))).thenReturn(null);

@@ -9,6 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,6 +19,7 @@ import org.springframework.web.context.request.RequestContextListener;
 @EnableAsync
 @EnableJpaAuditing
 @EnableOAuth2Sso
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
 
     public static void main(String[] args) {
@@ -29,6 +31,7 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
     public RequestContextListener requestContextListener() {
         return new RequestContextListener();
     }
+    
 
     @Value("${security.enable-csrf}")
     private boolean csrfEnabled;

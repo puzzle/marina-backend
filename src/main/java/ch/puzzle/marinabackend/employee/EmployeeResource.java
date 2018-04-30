@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,11 +35,13 @@ public class EmployeeResource {
     private SecurityService securityService;
 
     @GetMapping("/employees")
+    @PreAuthorize("hasRole('ADMIN')")
     public Iterable<Employee> getEmployees() {
         return employeRepository.findAll();
     }
 
     @GetMapping("/employees/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource<Employee>> getEmploye(@PathVariable Long id) {
         Optional<Employee> employe = employeRepository.findById(id);
 
@@ -53,6 +56,7 @@ public class EmployeeResource {
         return ResponseEntity.ok(resource);
     }
     @GetMapping("/employees/email")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource<Employee>> getEmployeeByEmail(@Param("email") String email) {
         Optional<Employee> employe = employeRepository.findByEmail(email);
 
@@ -68,11 +72,13 @@ public class EmployeeResource {
     } 
 
     @DeleteMapping("/employees/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteEmploye(@PathVariable Long id) {
         employeRepository.deleteById(id);
     }
 
     @PostMapping("/employees")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> createEmploye(@RequestBody Employee employe) {
         Employee savedEmploye = employeRepository.save(employe);
 
@@ -83,6 +89,7 @@ public class EmployeeResource {
 
     }
     @PostMapping("/employees/user")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> createEmployeByPrincipal(Principal principal) {
         User convertPrincipal = securityService.convertPrincipal(principal);
         if (convertPrincipal == null) {
@@ -99,6 +106,7 @@ public class EmployeeResource {
     }
 
     @PutMapping("/employees/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> updateEmploye(@RequestBody Employee employe, @PathVariable Long id) {
         Optional<Employee> employeeOptional = employeRepository.findById(id);
 
