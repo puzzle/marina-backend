@@ -1,31 +1,39 @@
 package ch.puzzle.marinabackend.security;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.HashMap;
-
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class SecurityServiceTest {
 
+    private SecurityService service;
+    private OAuth2Authentication principal;
+
+    @Before
+    public void setup() {
+        service = new SecurityService();
+        principal = SecurityTestUtils.getTestOAuth2Authentication();
+    }
+
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldCastPrincipal() {
         // given
-        SecurityService service = new SecurityService();
-        OAuth2Authentication p = SecurityTestUtils.getTestOAuth2Authentication();
-        @SuppressWarnings("unchecked")
-        HashMap<String, String> details = (HashMap<String, String>)  p.getUserAuthentication()
-                .getDetails();
+        HashMap<String, String> details = (HashMap<String, String>)
+                principal.getUserAuthentication().getDetails();
 
         // when
-        User u = service.convertPrincipal(p);
+        User u = service.convertPrincipal(principal);
 
         // then
         assertEquals(details.get("preferred_username"), u.getUsername());
@@ -35,34 +43,31 @@ public class SecurityServiceTest {
         assertEquals(details.get("email"), u.getEmail());
         assertEquals("baererToken", u.getBearerToken());
     }
-    
+
     @Test
     public void shouldNotCastPrincipal() {
         // given
-        SecurityService service = new SecurityService();
         Authentication p = mock(Authentication.class);
-        
+
         // when
         User u = service.convertPrincipal(p);
 
         // then
         assertNull(u);
-        
+
     }
-    
+
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldCastPrincipalWithoutBearerToken() {
         // given
-        SecurityService service = new SecurityService();
-        OAuth2Authentication p = SecurityTestUtils.getTestOAuth2Authentication();
-        WebAuthenticationDetails authdetails = mock(WebAuthenticationDetails.class);
-        when(p.getDetails()).thenReturn(authdetails);
-        @SuppressWarnings("unchecked")
-        HashMap<String, String> details = (HashMap<String, String>)  p.getUserAuthentication()
-                .getDetails();
+        WebAuthenticationDetails authDetails = mock(WebAuthenticationDetails.class);
+        when(principal.getDetails()).thenReturn(authDetails);
+        HashMap<String, String> details = (HashMap<String, String>)
+                principal.getUserAuthentication().getDetails();
 
         // when
-        User u = service.convertPrincipal(p);
+        User u = service.convertPrincipal(principal);
 
         // then
         assertEquals(details.get("preferred_username"), u.getUsername());
@@ -72,17 +77,15 @@ public class SecurityServiceTest {
         assertEquals(details.get("email"), u.getEmail());
         assertNull(u.getBearerToken());
     }
-    
+
     @Test
     public void shouldCastPrincipalOnlyBearerToken() {
         // given
-        SecurityService service = new SecurityService();
-        OAuth2Authentication p = SecurityTestUtils.getTestOAuth2Authentication();
         Authentication a = mock(AnonymousAuthenticationToken.class);
-        when(p.getUserAuthentication()).thenReturn(a);
+        when(principal.getUserAuthentication()).thenReturn(a);
 
         // when
-        User u = service.convertPrincipal(p);
+        User u = service.convertPrincipal(principal);
 
         // then
         assertNull(u.getUsername());
@@ -92,18 +95,15 @@ public class SecurityServiceTest {
         assertNull(u.getEmail());
         assertEquals("baererToken", u.getBearerToken());
     }
-    
+
     @Test
     public void shouldCastPrincipalOnlyBearerToken_UserPasswordToken() {
         // given
-        SecurityService service = new SecurityService();
-        OAuth2Authentication p = SecurityTestUtils.getTestOAuth2Authentication();
-        
-        when(p.getUserAuthentication().getDetails()).thenReturn(new Object());
+        when(principal.getUserAuthentication().getDetails()).thenReturn(new Object());
 
 
         // when
-        User u = service.convertPrincipal(p);
+        User u = service.convertPrincipal(principal);
 
         // then
         assertNull(u.getUsername());

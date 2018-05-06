@@ -1,11 +1,10 @@
 package ch.puzzle.marinabackend.employee;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-
 import ch.puzzle.marinabackend.security.SecurityTestUtils;
 import ch.puzzle.marinabackend.security.User;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class EmployeeTest {
 
@@ -13,10 +12,10 @@ public class EmployeeTest {
     public void shouldCreateEmployeeInstanceByUser() {
         // given
         User u = SecurityTestUtils.getTestUser();
-        
+
         // when
         Employee e = new Employee(u);
-        
+
         // then
         assertEquals(e.getUsername(), u.getUsername());
         assertEquals(e.getId(), null);

@@ -1,10 +1,10 @@
 package ch.puzzle.marinabackend.app;
 
+import ch.puzzle.marinabackend.MarinaBackendApplication;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
-import ch.puzzle.marinabackend.MarinaBackendApplication;
 
 public class ApplicationInfo {
     private String implementationTitle;
@@ -16,15 +16,15 @@ public class ApplicationInfo {
     private String gitBranch;
     private String buildJobName;
     private String buildJobUrl;
-    
+
     public ApplicationInfo() {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF");
 
         Properties prop = new Properties();
         try {
-            prop.load( is );
+            prop.load(is);
         } catch (IOException ex) {
-            
+
         }
         implementationVersion = MarinaBackendApplication.class.getPackage().getImplementationVersion();
         implementationTitle = MarinaBackendApplication.class.getPackage().getImplementationTitle();

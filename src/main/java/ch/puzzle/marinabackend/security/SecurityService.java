@@ -1,18 +1,18 @@
 package ch.puzzle.marinabackend.security;
 
-import java.security.Principal;
-import java.util.HashMap;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.stereotype.Component;
 
+import java.security.Principal;
+import java.util.HashMap;
+
 @Component
 public class SecurityService {
 
     public User convertPrincipal(Principal principal) {
-        
+
         if (principal instanceof OAuth2Authentication) {
             User u = new User();
             OAuth2Authentication auth = (OAuth2Authentication) principal;

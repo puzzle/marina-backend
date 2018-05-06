@@ -1,105 +1,100 @@
 package ch.puzzle.marinabackend.employee;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
-import java.net.URI;
-import java.security.Principal;
-import java.util.Optional;
-
+import ch.puzzle.marinabackend.security.SecurityService;
+import ch.puzzle.marinabackend.security.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import ch.puzzle.marinabackend.security.SecurityService;
-import ch.puzzle.marinabackend.security.User;
+import java.net.URI;
+import java.security.Principal;
+import java.util.Optional;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 public class EmployeeResource {
 
     @Autowired
-    private EmployeeRepository employeRepository;
-    
+    private EmployeeRepository employeeRepository;
+
     @Autowired
     private SecurityService securityService;
 
     @GetMapping("/employees")
     @PreAuthorize("hasRole('ADMIN')")
     public Iterable<Employee> getEmployees() {
-        return employeRepository.findAll();
+        return employeeRepository.findAll();
     }
 
     @GetMapping("/employees/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Resource<Employee>> getEmploye(@PathVariable Long id) {
-        Optional<Employee> employe = employeRepository.findById(id);
+    public ResponseEntity<Resource<Employee>> getEmployee(@PathVariable Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
 
-        if (!employe.isPresent()) {
+        if (!employee.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        Resource<Employee> resource = new Resource<Employee>(employe.get());
+        Resource<Employee> resource = new Resource<>(employee.get());
 
         ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).getEmployees());
         resource.add(linkTo.withRel("all-employees"));
 
         return ResponseEntity.ok(resource);
     }
+
     @GetMapping("/employees/email")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource<Employee>> getEmployeeByEmail(@Param("email") String email) {
-        Optional<Employee> employe = employeRepository.findByEmail(email);
+        Optional<Employee> employee = employeeRepository.findByEmail(email);
 
-        if (!employe.isPresent()) {
+        if (!employee.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        Resource<Employee> resource = new Resource<Employee>(employe.get());
+        Resource<Employee> resource = new Resource<Employee>(employee.get());
 
         ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).getEmployees());
         resource.add(linkTo.withRel("all-employees"));
 
         return ResponseEntity.ok(resource);
-    } 
+    }
 
     @DeleteMapping("/employees/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteEmploye(@PathVariable Long id) {
-        employeRepository.deleteById(id);
+    public void deleteEmployee(@PathVariable Long id) {
+        employeeRepository.deleteById(id);
     }
 
     @PostMapping("/employees")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> createEmploye(@RequestBody Employee employe) {
-        Employee savedEmploye = employeRepository.save(employe);
+    public ResponseEntity<Object> createEmployee(@RequestBody Employee employee) {
+        Employee savedEmployee = employeeRepository.save(employee);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedEmploye.getId()).toUri();
+                .buildAndExpand(savedEmployee.getId()).toUri();
 
         return ResponseEntity.created(location).build();
 
     }
+
     @PostMapping("/employees/user")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Object> createEmployeByPrincipal(Principal principal) {
-        User convertPrincipal = securityService.convertPrincipal(principal);
-        if (convertPrincipal == null) {
+    public ResponseEntity<Object> createEmployeeByPrincipal(Principal principal) {
+        User convertedPrincipal = securityService.convertPrincipal(principal);
+        if (convertedPrincipal == null) {
             return ResponseEntity.notFound().build();
         }
-        
-        Employee savedEmploye = employeRepository.save(new Employee());
+
+        Employee savedEmployee = employeeRepository.save(new Employee(convertedPrincipal));
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().replacePath("/employees/{id}")
-                .buildAndExpand(savedEmploye.getId()).toUri();
+                .buildAndExpand(savedEmployee.getId()).toUri();
 
         return ResponseEntity.created(location).build();
 
@@ -107,15 +102,15 @@ public class EmployeeResource {
 
     @PutMapping("/employees/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> updateEmploye(@RequestBody Employee employe, @PathVariable Long id) {
-        Optional<Employee> employeeOptional = employeRepository.findById(id);
+    public ResponseEntity<Object> updateEmployee(@RequestBody Employee employee, @PathVariable Long id) {
+        Optional<Employee> employeeOptional = employeeRepository.findById(id);
 
         if (!employeeOptional.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
-        employe.setId(id);
-        employeRepository.save(employe);
+        employee.setId(id);
+        employeeRepository.save(employee);
 
         return ResponseEntity.noContent().build();
     }

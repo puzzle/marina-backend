@@ -1,38 +1,31 @@
 package ch.puzzle.marinabackend.employee;
 
-import java.math.BigDecimal;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
+import ch.puzzle.marinabackend.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import ch.puzzle.marinabackend.AbstractEntity;
+import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "current_configuration")
-public class CurrentConfiguration extends AbstractEntity{
+public class CurrentConfiguration extends AbstractEntity {
     @OneToOne(mappedBy = "currentConfiguration")
     @JsonBackReference
     private Employee employee;
-    
+
     @Column(name = "amount_chf")
     private BigDecimal amountChf;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "wallet_type")
     private WalletType walletType;
-    
+
     @Column(name = "current_address")
     private String currentAddress;
-    
+
     @Column(name = "bip32_node")
     private String bip32Node;
-    
+
     @Column(name = "current_address_index")
     private Long currentAddressIndex;
 

@@ -1,9 +1,6 @@
 package ch.puzzle.marinabackend.employee;
 
 import ch.puzzle.marinabackend.TestConfiguration;
-import ch.puzzle.marinabackend.employee.EmployeeResource;
-import ch.puzzle.marinabackend.employee.Employee;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

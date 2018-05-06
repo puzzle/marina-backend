@@ -31,7 +31,6 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
     public RequestContextListener requestContextListener() {
         return new RequestContextListener();
     }
-    
 
     @Value("${security.enable-csrf}")
     private boolean csrfEnabled;

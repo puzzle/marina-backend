@@ -1,20 +1,20 @@
 package ch.puzzle.marinabackend;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Author: K.Tran
  * Extracts and converts Keycloak realm roles to Spring Security compatible {@link GrantedAuthority}
- *
+ * <p>
  * Basically takes roles Array and Prepends "ROLE_" to it.
- *
+ * <p>
  * Attention: Needs a "User Realm Role" Mapper for the Realm Roles or the "User Client Role" Mapper for the client Roles in the Keycloak Client:
  * Mapper Type: User Realm Role
  * Realm Role prefix: empty
@@ -50,7 +50,7 @@ public class KeycloakRolesExtractor implements AuthoritiesExtractor {
         return null;
     }
 
-    private List<GrantedAuthority> extractRoles( Object rolesObj) {
+    private List<GrantedAuthority> extractRoles(Object rolesObj) {
         if (rolesObj instanceof List) {
             @SuppressWarnings("unchecked")
             List<String> roles = (List<String>) rolesObj;

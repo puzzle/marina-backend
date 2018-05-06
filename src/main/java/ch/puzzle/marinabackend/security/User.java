@@ -1,7 +1,7 @@
 package ch.puzzle.marinabackend.security;
 
 public class User {
-    
+
     private String id;
     private String bearerToken;
     private String username;

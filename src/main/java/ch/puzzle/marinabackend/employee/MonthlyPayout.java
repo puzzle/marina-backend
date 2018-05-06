@@ -1,47 +1,41 @@
 package ch.puzzle.marinabackend.employee;
 
+import ch.puzzle.marinabackend.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import ch.puzzle.marinabackend.AbstractEntity;
-
 @Entity
 @Table(name = "monthly_payout")
-public class MonthlyPayout extends AbstractEntity{
+public class MonthlyPayout extends AbstractEntity {
     @ManyToOne
-    @JoinColumn(name="employee_id")
+    @JoinColumn(name = "employee_id")
     @JsonBackReference
     private Employee employee;
-    
+
     @Column(name = "year")
     private Integer year;
-    
+
     @Column(name = "month")
     private Integer month;
-    
+
     @Column(name = "amount_chf")
     private BigDecimal amountChf;
-    
+
     @Column(name = "amount_btc")
     private Long amountBtc;
-    
+
     @Column(name = "rate_chf")
     private BigDecimal rateChf;
-    
+
     @Column(name = "payment_date")
     private LocalDateTime paymentDate;
-    
+
     @Column(name = "public_address")
     private String publicAddress;
-    
+
     @Column(name = "address_index")
     private Long addressIndex;
 
