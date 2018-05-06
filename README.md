@@ -26,6 +26,12 @@ We use Lliquibase to manage the database scheme and changes
 
 ## Dev Environment
 
+To start the application in local development mode:
+
+```bash
+SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
+```
+
 ### Postgresql DB
 
 We use the docker image `centos/postgresql-96-centos7`
