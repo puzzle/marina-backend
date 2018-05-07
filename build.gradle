@@ -10,10 +10,15 @@ buildscript {
 	}
 }
 
+plugins {
+  id "org.sonarqube" version "2.6.2"
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: "org.sonarqube"
 
 def getVersionName = { -> 
 	if (System.getenv( 'GIT_COMMIT' )  != null) {

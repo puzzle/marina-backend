@@ -2,7 +2,7 @@ pipeline {
     agent { label 'buildnode' }
     options {
         buildDiscarder(logRotator(numToKeepStr: '5'))
-        timeout(time: 20, unit: 'MINUTES')
+        timeout(time: 30, unit: 'MINUTES')
     }
     triggers {
         pollSCM('H/5 * * * *')
@@ -19,7 +19,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh './gradlew build'
+                sh './gradlew build sonarqube'
             }
         }
         stage('Build Docker Image') {
