@@ -29,8 +29,8 @@ import java.util.Map;
 @Component
 public class KeycloakRolesExtractor implements AuthoritiesExtractor {
 
-    private final String ROLE_PREFIX = "ROLE_";
-    private final String ROLE_USER = ROLE_PREFIX + "USER";
+    private static final String ROLE_PREFIX = "ROLE_";
+    private static final String ROLE_USER = ROLE_PREFIX + "USER";
 
     @Override
     public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
