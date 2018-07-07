@@ -26,10 +26,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {MarinaBackendApplication.class,
-        TestConfiguration.class}, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {MarinaBackendApplication.class, TestConfiguration.class},
+        webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc(secure = true)
 @ActiveProfiles("test")
 public class SecurityResourceTest {

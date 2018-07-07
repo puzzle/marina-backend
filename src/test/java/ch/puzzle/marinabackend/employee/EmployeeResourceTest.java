@@ -33,8 +33,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {MarinaBackendApplication.class,
-        TestConfiguration.class}, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {MarinaBackendApplication.class, TestConfiguration.class},
+        webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc(secure = true)
 @ActiveProfiles("test")
 public class EmployeeResourceTest {
@@ -44,7 +44,6 @@ public class EmployeeResourceTest {
 
     @MockBean
     private SecurityService securityService;
-
 
     @MockBean
     private EmployeeRepository employeRepository;

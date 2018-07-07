@@ -36,7 +36,6 @@ public class EmployeeResourceDataTest {
     @Autowired
     private EmployeeResource employeeResource;
 
-
     @Test
     public void shouldFindAllEmployees() throws Exception {
         //given
