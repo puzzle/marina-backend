@@ -1,5 +1,7 @@
 package ch.puzzle.marinabackend.security;
 
+import java.util.Set;
+
 public class User {
 
     private String id;
@@ -8,6 +10,7 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
+    private Set<String> authorities;
 
     public String getId() {
         return id;
@@ -57,4 +60,11 @@ public class User {
         this.bearerToken = bearerToken;
     }
 
+    public Set<String> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<String> authorities) {
+        this.authorities = authorities;
+    }
 }

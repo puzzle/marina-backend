@@ -1,5 +1,6 @@
 package ch.puzzle.marinabackend;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,10 +18,12 @@ public abstract class AbstractEntity {
 
     @CreatedDate
     @Column(name = "created_date")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createdDate;
 
     @LastModifiedDate
     @Column(name = "modified_date")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime modifiedDate;
 
     @Version

@@ -7,9 +7,6 @@ server:
 
 # Postgresql DB default Values
 spring:
-  http:
-    converters:
-      preferred-json-mapper: jackson
   database:
     driverClassName: org.postgresql.Driver
   datasource:
@@ -23,6 +20,9 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
 
 # Oauth Client configuration
 security:

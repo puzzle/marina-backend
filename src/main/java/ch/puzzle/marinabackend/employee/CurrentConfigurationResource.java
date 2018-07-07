@@ -78,6 +78,7 @@ public class CurrentConfigurationResource {
     }
     
     @PutMapping("/configuration/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> updateCurrentConfiguration(@RequestBody CurrentConfiguration currentConfiguration, @PathVariable Long id) {
         Optional<CurrentConfiguration> currentConfigurationOptional = currentConfigurationRepository.findById(id);
 

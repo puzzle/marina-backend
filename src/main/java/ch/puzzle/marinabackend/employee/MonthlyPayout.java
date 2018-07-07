@@ -1,7 +1,10 @@
 package ch.puzzle.marinabackend.employee;
 
 import ch.puzzle.marinabackend.AbstractEntity;
+import ch.puzzle.marinabackend.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -31,6 +34,7 @@ public class MonthlyPayout extends AbstractEntity {
     private BigDecimal rateChf;
 
     @Column(name = "payment_date")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime paymentDate;
 
     @Column(name = "public_address")

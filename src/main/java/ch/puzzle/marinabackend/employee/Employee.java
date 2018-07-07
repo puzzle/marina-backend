@@ -1,13 +1,18 @@
 package ch.puzzle.marinabackend.employee;
 
 import ch.puzzle.marinabackend.AbstractEntity;
+import ch.puzzle.marinabackend.LocalDateTimeSerializer;
 import ch.puzzle.marinabackend.security.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Table(name = "employee")
@@ -38,6 +43,7 @@ public class Employee extends AbstractEntity {
     private BigDecimal bruttoSalary;
 
     @Column(name = "validated_at_date")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime validatedAt;
 
     @OneToOne
@@ -50,7 +56,7 @@ public class Employee extends AbstractEntity {
     @RestResource(path = "employeeCurrentConfiguration", rel = "currentConfiguration")
     private CurrentConfiguration currentConfiguration;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee", fetch = EAGER)
     private List<MonthlyPayout> monthlyPayouts;
 
     public String getFirstName() {
