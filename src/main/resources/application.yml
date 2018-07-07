@@ -7,6 +7,9 @@ server:
 
 # Postgresql DB default Values
 spring:
+  http:
+    converters:
+      preferred-json-mapper: jackson
   database:
     driverClassName: org.postgresql.Driver
   datasource:

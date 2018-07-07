@@ -57,12 +57,19 @@ public class EmployeeResource {
         if (!employee.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        Resource<Employee> resource = new Resource<Employee>(employee.get());
+        Resource<Employee> resource = new Resource<>(employee.get());
 
         ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).getEmployees());
         resource.add(linkTo.withRel("all-employees"));
 
         return ResponseEntity.ok(resource);
+    }
+    
+    @GetMapping("/employees/user")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Resource<Employee>> getEmployeeByLoggedInUser(Principal principal) {
+        User loggedInUser = securityService.convertPrincipal(principal);
+        return getEmployeeByEmail(loggedInUser.getEmail());
     }
 
     @DeleteMapping("/employees/{id}")

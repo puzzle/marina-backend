@@ -34,7 +34,7 @@ public class KeycloakRolesExtractor implements AuthoritiesExtractor {
 
     @Override
     public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
-        List<GrantedAuthority> result = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> result = new ArrayList<>();
         // adds default Role
         result.addAll(AuthorityUtils.createAuthorityList(ROLE_USER));
         if (map.containsKey("roles")) {
@@ -55,7 +55,7 @@ public class KeycloakRolesExtractor implements AuthoritiesExtractor {
             @SuppressWarnings("unchecked")
             List<String> roles = (List<String>) rolesObj;
             return AuthorityUtils
-                    .createAuthorityList(roles.stream().map(s -> ROLE_PREFIX + s.toUpperCase()).toArray(size -> new String[size]));
+                    .createAuthorityList(roles.stream().map(s -> ROLE_PREFIX + s.toUpperCase()).toArray(String[]::new));
         }
         return null;
     }

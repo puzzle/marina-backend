@@ -21,6 +21,8 @@
 .idea/libraries
 .idea/modules
 .idea/modules.xml
+.idea/httpRequests
+.idea/dataSources
 
 *.iws
 *.iml
