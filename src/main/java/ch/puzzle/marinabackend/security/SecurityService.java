@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,11 +38,14 @@ public class SecurityService {
                     u.setEmail(details.get("email").toString());
                     u.setFirstName(details.get("given_name").toString());
                     u.setLastName(details.get("family_name").toString());
-                    Set<String> authorities = rolesExtractor.extractAuthorities(details)
+                    List<GrantedAuthority> authorities = rolesExtractor.extractAuthorities(details);
+                    if (authorities != null) {
+                        Set<String> stringAuthorities = authorities
                             .stream()
-                            .map(GrantedAuthority::getAuthority)
-                            .collect(Collectors.toSet());
-                    u.setAuthorities(authorities);
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toSet());
+                        u.setAuthorities(stringAuthorities);
+                    }
                 }
             }
 
