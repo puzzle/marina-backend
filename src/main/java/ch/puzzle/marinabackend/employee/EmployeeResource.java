@@ -1,5 +1,6 @@
 package ch.puzzle.marinabackend.employee;
 
+import ch.puzzle.marinabackend.app.ApplicationProperties;
 import ch.puzzle.marinabackend.security.SecurityService;
 import ch.puzzle.marinabackend.security.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,13 @@ import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.security.Principal;
 import java.util.Optional;
 
@@ -26,6 +31,9 @@ public class EmployeeResource {
 
     @Autowired
     private SecurityService securityService;
+    
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
     @GetMapping("/employees")
     @PreAuthorize("hasRole('ADMIN')")
@@ -64,7 +72,7 @@ public class EmployeeResource {
 
         return ResponseEntity.ok(resource);
     }
-    
+
     @GetMapping("/employees/user")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Resource<Employee>> getEmployeeByLoggedInUser(Principal principal) {
@@ -122,4 +130,29 @@ public class EmployeeResource {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/employees/{id}/agreement")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> uploadAgreement(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        Optional<Employee> employeeOptional = employeeRepository.findById(id);
+
+        if (!employeeOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Employee employee = employeeOptional.get();
+
+        File targetFile = new File(applicationProperties.getPersistentFilePath(), employee.getUsername() + ".pdf");
+        targetFile.mkdirs();
+        if (targetFile.exists()) {
+            targetFile.delete();
+        }
+        file.transferTo(targetFile);
+
+        Agreement agreement = new Agreement();
+        agreement.setEmployee(employee);
+        agreement.setAgreementPdfPath(targetFile.getAbsolutePath());
+        employee.setAgreement(agreement);
+        employeeRepository.save(employee);
+
+        return ResponseEntity.noContent().build();
+    }
 }

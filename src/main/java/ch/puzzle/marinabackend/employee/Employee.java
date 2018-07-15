@@ -12,11 +12,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Table(name = "employee")
 public class Employee extends AbstractEntity {
+    
     public Employee() {
     }
 
@@ -46,13 +48,11 @@ public class Employee extends AbstractEntity {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime validatedAt;
 
-    @OneToOne
-    @JoinColumn(name = "agreement_id")
+    @OneToOne(cascade = ALL, mappedBy = "employee")
     @RestResource(path = "employeeAgreement", rel = "agreement")
     private Agreement agreement;
 
-    @OneToOne
-    @JoinColumn(name = "current_configuration_id")
+    @OneToOne(cascade = ALL, mappedBy = "employee")
     @RestResource(path = "employeeCurrentConfiguration", rel = "currentConfiguration")
     private CurrentConfiguration currentConfiguration;
 

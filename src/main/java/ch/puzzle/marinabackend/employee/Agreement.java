@@ -3,17 +3,17 @@ package ch.puzzle.marinabackend.employee;
 import ch.puzzle.marinabackend.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "agreement")
 public class Agreement extends AbstractEntity {
-    @OneToOne(mappedBy = "agreement")
+    
+    @OneToOne
+    @JoinColumn(name = "employee_id")
     @JsonBackReference
     private Employee employee;
+    
     @Column(name = "agreement_pdf_path")
     private String agreementPdfPath;
 

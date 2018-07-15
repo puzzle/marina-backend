@@ -9,7 +9,9 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "current_configuration")
 public class CurrentConfiguration extends AbstractEntity {
-    @OneToOne(mappedBy = "currentConfiguration")
+
+    @OneToOne
+    @JoinColumn(name = "employee_id")
     @JsonBackReference
     private Employee employee;
 

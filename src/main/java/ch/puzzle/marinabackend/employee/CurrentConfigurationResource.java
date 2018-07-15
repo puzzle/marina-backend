@@ -2,6 +2,7 @@ package ch.puzzle.marinabackend.employee;
 
 import java.net.URI;
 import java.security.Principal;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class CurrentConfigurationResource {
         if (!employee.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        Resource<CurrentConfiguration> resource = new Resource<CurrentConfiguration>(employee.get().getCurrentConfiguration());
+        Resource<CurrentConfiguration> resource = new Resource<>(employee.get().getCurrentConfiguration());
 
         return ResponseEntity.ok(resource);
     }
@@ -49,12 +50,22 @@ public class CurrentConfigurationResource {
     public ResponseEntity<Resource<CurrentConfiguration>> getMyConfiguration(Principal principal) {
         User convertPrincipal = securityService.convertPrincipal(principal);
         // find employee by email address
-        Optional<Employee> employee = employeRepository.findByEmail(convertPrincipal.getEmail());
-        if (!employee.isPresent()) {
+        Optional<Employee> employeeOptional = employeRepository.findByEmail(convertPrincipal.getEmail());
+        if (!employeeOptional.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        
-        Resource<CurrentConfiguration> resource = new Resource<CurrentConfiguration>(employee.get().getCurrentConfiguration());
+
+        Employee employee = employeeOptional.get();
+        CurrentConfiguration currentConfiguration = employee.getCurrentConfiguration();
+        if (currentConfiguration == null) {
+            currentConfiguration = new CurrentConfiguration();
+            currentConfiguration.setEmployee(employee);
+            currentConfiguration.setWalletType(WalletType.MANUAL);
+            employee.setCurrentConfiguration(currentConfiguration);
+            employee = employeRepository.save(employee);
+        }
+
+        Resource<CurrentConfiguration> resource = new Resource<>(employee.getCurrentConfiguration());
 
         return ResponseEntity.ok(resource);
     }
@@ -79,14 +90,31 @@ public class CurrentConfigurationResource {
     
     @PutMapping("/configuration/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Object> updateCurrentConfiguration(@RequestBody CurrentConfiguration currentConfiguration, @PathVariable Long id) {
+    public ResponseEntity<Object> updateCurrentConfiguration(@RequestBody CurrentConfiguration currentConfiguration,
+                                                             @PathVariable Long id, Principal principal) {
         Optional<CurrentConfiguration> currentConfigurationOptional = currentConfigurationRepository.findById(id);
 
         if (!currentConfigurationOptional.isPresent()) {
             return ResponseEntity.notFound().build();
         }
+        CurrentConfiguration dbConfiguration = currentConfigurationOptional.get();
+
+        User convertPrincipal = securityService.convertPrincipal(principal);
+        // find employee by email address
+        Optional<Employee> employeeOptional = employeRepository.findByEmail(convertPrincipal.getEmail());
+        if (!employeeOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Employee dbEmployee = employeeOptional.get();
+        
+        // make sure the updated configuration belongs to the user
+        if (dbConfiguration.getEmployee() == null ||
+                !Objects.equals(dbConfiguration.getEmployee().getId(), dbEmployee.getId())) {
+            return ResponseEntity.notFound().build();
+        }
 
         currentConfiguration.setId(id);
+        currentConfiguration.setEmployee(dbEmployee);
         currentConfigurationRepository.save(currentConfiguration);
 
         return ResponseEntity.noContent().build();

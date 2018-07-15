@@ -47,3 +47,5 @@ security:
     enable: false
     allow-origin:
     
+application:
+  persistentFilePath: /tmp/marina

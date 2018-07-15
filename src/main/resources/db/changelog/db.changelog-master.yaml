@@ -13,70 +13,6 @@ databaseChangeLog:
       author: phil-pona
       changes:
         - createTable:
-            tableName: agreement
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: created_date
-                  type: DATETIME
-              - column:
-                  name: modified_date
-                  type: DATETIME
-              - column:
-                  name: version
-                  type: INT
-              - column:
-                  name: agreement_pdf_path
-                  type: varchar(200)
-                  constraints:
-                    nullable: false
-        - createTable:
-            tableName: current_configuration
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: created_date
-                  type: DATETIME
-              - column:
-                  name: modified_date
-                  type: DATETIME
-              - column:
-                  name: version
-                  type: INT
-              - column:
-                  name: amount_chf
-                  type: decimal
-              - column:
-                  name: wallet_type
-                  type: varchar(20)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: current_address
-                  type: varchar(200)
-                  constraints:
-                    nullable: true
-              - column:
-                  name: bip32_node
-                  type: varchar(256)
-                  constraints:
-                    nullable: true
-              - column:
-                  name: current_address_index
-                  type: BIGINT
-        - createTable:
             tableName: employee
             columns:
               - column:
@@ -121,28 +57,92 @@ databaseChangeLog:
               - column:
                   name: validated_at_date
                   type: DATETIME
+        - createTable:
+            tableName: agreement
+            columns:
               - column:
-                  name: agreement_id
+                  name: id
                   type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
               - column:
-                  name: current_configuration_id
+                  name: employee_id
                   type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: DATETIME
+              - column:
+                  name: modified_date
+                  type: DATETIME
+              - column:
+                  name: version
+                  type: INT
+              - column:
+                  name: agreement_pdf_path
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
         - addForeignKeyConstraint:
-            baseColumnNames: agreement_id
-            baseTableName: employee
-            constraintName: fk_employee_agreement
+            baseColumnNames: employee_id
+            baseTableName: agreement
+            constraintName: fk_agreement_employee_id
             onDelete: CASCADE
             onUpdate: RESTRICT
             referencedColumnNames: id
-            referencedTableName: agreement
+            referencedTableName: employee
+        - createTable:
+            tableName: current_configuration
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: employee_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: DATETIME
+              - column:
+                  name: modified_date
+                  type: DATETIME
+              - column:
+                  name: version
+                  type: INT
+              - column:
+                  name: amount_chf
+                  type: decimal
+              - column:
+                  name: wallet_type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: current_address
+                  type: varchar(200)
+              - column:
+                  name: bip32_node
+                  type: varchar(256)
+              - column:
+                  name: current_address_index
+                  type: BIGINT
         - addForeignKeyConstraint:
-            baseColumnNames: current_configuration_id
-            baseTableName: employee
-            constraintName: fk_employee_current_config
+            baseColumnNames: employee_id
+            baseTableName: current_configuration
+            constraintName: fk_current_configuration_employee_id
             onDelete: CASCADE
             onUpdate: RESTRICT
             referencedColumnNames: id
-            referencedTableName: current_configuration
+            referencedTableName: employee
         - createTable:
             tableName: monthly_payout
             columns:
