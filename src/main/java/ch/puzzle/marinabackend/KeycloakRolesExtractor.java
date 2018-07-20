@@ -34,20 +34,20 @@ public class KeycloakRolesExtractor implements AuthoritiesExtractor {
 
     @Override
     public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
-        List<GrantedAuthority> result = new ArrayList<>();
         // adds default Role
-        result.addAll(AuthorityUtils.createAuthorityList(ROLE_USER));
-        if (map.containsKey("roles")) {
-            Object rolesObj = map.get("roles");
-            result.addAll(extractRoles(rolesObj));
-            return result;
+        List<GrantedAuthority> result = new ArrayList<>(AuthorityUtils.createAuthorityList(ROLE_USER));
+
+        if (map != null) {
+            if (map.containsKey("roles")) {
+                Object rolesObj = map.get("roles");
+                result.addAll(extractRoles(rolesObj));
+            }
+            if (map.containsKey("client_roles")) {
+                Object rolesObj = map.get("client_roles");
+                result.addAll(extractRoles(rolesObj));
+            }
         }
-        if (map.containsKey("client_roles")) {
-            Object rolesObj = map.get("client_roles");
-            result.addAll(extractRoles(rolesObj));
-            return result;
-        }
-        return null;
+        return result;
     }
 
     private List<GrantedAuthority> extractRoles(Object rolesObj) {

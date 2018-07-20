@@ -9,7 +9,6 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +31,7 @@ public class SecurityService {
                         .getUserAuthentication();
                 if (userAuthentication.getDetails() instanceof Map<?, ?>) {
                     Map<String, Object> details = (Map<String, Object>) userAuthentication.getDetails();
-                    
+
                     u.setId(details.get("sub").toString());
                     u.setUsername(details.get("preferred_username").toString());
                     u.setEmail(details.get("email").toString());
@@ -41,7 +40,7 @@ public class SecurityService {
                     List<GrantedAuthority> authorities = rolesExtractor.extractAuthorities(details);
                     if (authorities != null) {
                         Set<String> stringAuthorities = authorities
-                            .stream()
+                                .stream()
                                 .map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.toSet());
                         u.setAuthorities(stringAuthorities);
