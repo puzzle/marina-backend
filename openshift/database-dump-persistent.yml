@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: backup-template
+  annotations:
+    description: 'Backup postgres databases'
+parameters:
+  - name: BACKUP_SCHEDULE
+    description: 'Cron-like schedule expression. Default: at 23:23'
+    value: '23 23 * * *'
+  - name: BACKUP_KEEP
+    description: 'Amount of Backups to be kept'
+    value: "5"
+  - name: PGUSER
+    description: 'Postgresql User'
+  - name: PGPASSWORD
+    description: 'Postgresql Password'
+  - name: PGHOST
+    description: 'Postgresql Host'
+  - name: PGPORT
+    description: 'Postgresql Port'
+    value: '5432'
+  - name: PGDATABASE
+    description: 'Postgresql Database'
+  - name: BACKUP_DESTINATION
+    description: 'Destination directory for file backups'
+    value: '/backup'
+objects:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: backup
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+  - apiVersion: batch/v2alpha1
+    kind: CronJob
+    metadata:
+      name: backup
+    spec:
+      schedule: ${BACKUP_SCHEDULE}
+      concurrencyPolicy: Forbid
+      jobTemplate:
+        spec:
+          template:
+            spec:
+              volumes:
+                - name: backup
+                  persistentVolumeClaim:
+                    claimName: backup
+              containers:
+                - name: backup
+                  image: 'registry.access.redhat.com/rhscl/postgresql-95-rhel7'
+                  imagePullPolicy: IfNotPresent
+                  resources: {}
+                  terminationMessagePath: /dev/termination-log
+                  terminationMessagePolicy: File
+                  command:
+                    - 'bash'
+                    - '-c'
+                    - ls -rdt /backup/dump-* | head -n -$BACKUP_KEEP
+                      | xargs rm -rf; DIR=/backup/dump-`date +%F-%T`; mkdir -p $DIR;
+                      pg_dump --username=$PGUSER --host=$PGHOST --port=$PGPORT $POSTGRESQL_DATABASE | gzip > $DIR/dump.gz;
+                      echo "Backup complete"; echo; echo "To restore, use:"; echo "TODO"; sleep 60
+
+                  env:
+                    - name: BACKUP_KEEP
+                      value: ${BACKUP_KEEP}
+                    - name: PGUSER
+                      value: ${PGUSER}
+                    - name: PGPASSWORD
+                      value: ${PGPASSWORD}
+                    - name: PGHOST
+                      value: ${PGHOST}
+                    - name: PGPORT
+                      value: ${PGPORT}
+                    - name: PGDATABASE
+                      value: ${PGDATABASE}
+                    - name: BACKUP_DESTINATION
+                      value: ${BACKUP_DESTINATION}
+                  volumeMounts:
+                    - name: backup
+                      mountPath: ${BACKUP_DESTINATION}
+              restartPolicy: Never

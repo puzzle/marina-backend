@@ -53,6 +53,14 @@ or run the pre-configured docker-compose command:
 docker-compose up -d postgresql-localdev
 ```
 
+#### Backup
+
+To create a backup cronjob on OpenSphift run the following command
+```
+oc process -f openshift/database-dump-persistent.yml -pPGUSER=user -pPGPASSWORD=12345 -pPGHOST=host -pPGDATABASE=database | oc create -f -
+```
+
+
 ### OAuth
 
 configure secret values to your oauth integration via Environment variables
