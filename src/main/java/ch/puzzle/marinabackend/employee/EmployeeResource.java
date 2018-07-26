@@ -147,7 +147,10 @@ public class EmployeeResource {
         }
         file.transferTo(targetFile);
 
-        Agreement agreement = new Agreement();
+        Agreement agreement = employee.getAgreement();
+        if (agreement == null) {
+            agreement = new Agreement();
+        }
         agreement.setEmployee(employee);
         agreement.setAgreementPdfPath(targetFile.getAbsolutePath());
         employee.setAgreement(agreement);
