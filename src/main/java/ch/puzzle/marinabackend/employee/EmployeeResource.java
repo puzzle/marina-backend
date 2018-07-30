@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.Optional;
 
@@ -157,5 +161,36 @@ public class EmployeeResource {
         employeeRepository.save(employee);
 
         return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/employees/user/agreement")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity downloadAgreement(Principal principal) throws IOException {
+        User loggedInUser = securityService.convertPrincipal(principal);
+        return getAgreement(employeeRepository.findByEmail(loggedInUser.getEmail()));
+    }
+
+    @GetMapping("/employees/{id}/agreement")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity downloadAgreement(@PathVariable Long id) throws IOException {
+        return getAgreement(employeeRepository.findById(id));
+    }
+    
+    private ResponseEntity getAgreement(Optional<Employee> employeeOptional) throws IOException {
+        if (!employeeOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Employee employee = employeeOptional.get();
+        if (employee.getAgreement() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Path path = Paths.get(employee.getAgreement().getAgreementPdfPath());
+        byte[] bytes = Files.readAllBytes(path);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        headers.set("Content-Type", "application/pdf");
+        headers.set("Content-Disposition", "attachment; filename=" + path.getFileName().toString());
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
 }
