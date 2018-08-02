@@ -22,7 +22,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -32,6 +36,9 @@ public class EmployeeResource {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private MonthlyPayoutRepository monthlyPayoutRepository;
 
     @Autowired
     private SecurityService securityService;
@@ -99,7 +106,30 @@ public class EmployeeResource {
                 .buildAndExpand(savedEmployee.getId()).toUri();
 
         return ResponseEntity.created(location).build();
-
+    }
+    
+    @PostMapping("/employees/payouts")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> savePayouts(@RequestBody List<MonthlyPayoutVM> payouts) {
+        List<MonthlyPayout> dbPayouts = payouts
+                .stream()
+                .map(p -> {
+                    Employee byId = employeeRepository.findById(p.getEmployeeId())
+                            .orElseThrow(() -> new RuntimeException("employee not found"));
+                    MonthlyPayout payout = new MonthlyPayout();
+                    payout.setEmployee(byId);
+                    payout.setYear(LocalDate.now().getYear());
+                    payout.setYear(LocalDate.now().getMonthValue());
+                    payout.setAmountChf(p.getAmountChf());
+                    payout.setAmountBtc(p.getAmountBtc());
+                    payout.setRateChf(p.getRateChf());
+                    payout.setPaymentDate(LocalDateTime.now());
+                    payout.setPublicAddress(p.getPublicAddress());
+                    return payout;
+                })
+                .collect(Collectors.toList());
+        monthlyPayoutRepository.saveAll(dbPayouts);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/employees/user")
