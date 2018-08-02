@@ -2,6 +2,7 @@ package ch.puzzle.marinabackend.employee;
 
 import java.net.URI;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -23,6 +24,10 @@ import ch.puzzle.marinabackend.security.User;
 
 @RestController
 public class CurrentConfigurationResource {
+    
+    public static final Integer DATE_LOCK_START = 11;
+    public static final Integer DATE_LOCK_END = 25;
+    
     @Autowired
     private CurrentConfigurationRepository currentConfigurationRepository;
     
@@ -92,6 +97,11 @@ public class CurrentConfigurationResource {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> updateCurrentConfiguration(@RequestBody CurrentConfiguration currentConfiguration,
                                                              @PathVariable Long id, Principal principal) {
+
+        int dayOfMonth = LocalDate.now().getDayOfMonth();
+        if (dayOfMonth >= DATE_LOCK_START && dayOfMonth <= DATE_LOCK_END) {
+            return ResponseEntity.badRequest().build();
+        }
         Optional<CurrentConfiguration> currentConfigurationOptional = currentConfigurationRepository.findById(id);
 
         if (!currentConfigurationOptional.isPresent()) {
