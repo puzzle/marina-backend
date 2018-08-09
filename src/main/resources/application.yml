@@ -46,6 +46,7 @@ security:
   enable-csrf: false
   redirecturl:
      frontend: /
+     logout: /
   # Cross Origin Request Security configuration
   cors:
     enable: false
@@ -53,3 +54,4 @@ security:
     
 application:
   persistentFilePath: /tmp/marina
+

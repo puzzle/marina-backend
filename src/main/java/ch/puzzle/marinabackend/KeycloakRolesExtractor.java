@@ -25,7 +25,6 @@ import java.util.Map;
  * Add to access token: ON
  * Add to userinfo: ON
  */
-
 @Component
 public class KeycloakRolesExtractor implements AuthoritiesExtractor {
 
