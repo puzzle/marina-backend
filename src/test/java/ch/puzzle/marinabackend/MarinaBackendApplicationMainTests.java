@@ -12,5 +12,4 @@ public class MarinaBackendApplicationMainTests {
         String[] args = {"--spring.config.location=classpath:/application-test.yml", "--server.port=8099"};
         MarinaBackendApplication.main(args);
     }
-
 }

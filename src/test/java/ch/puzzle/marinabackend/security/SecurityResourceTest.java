@@ -74,6 +74,14 @@ public class SecurityResourceTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void shouldRedirectToLogout() throws Exception {
+        mvc.perform(get("/ssoLogout").contentType(APPLICATION_JSON))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/logout"));
+    }
+
+    @Test
     public void unauthorizedRequestsShouldnotBeAllowed() throws Exception {
         mvc.perform(get("/sso").contentType(APPLICATION_JSON))
                 .andExpect(status().isFound())

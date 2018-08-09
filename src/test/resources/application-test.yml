@@ -31,6 +31,7 @@ security:
   enable-csrf: false
   redirecturl:
      frontend: /
+     logout: /logout
   cors:
     enable: true
     allow-origin: "*"
