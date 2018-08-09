@@ -87,5 +87,4 @@ public class SecurityResourceTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrlPattern("http://*/login"));
     }
-
 }

@@ -1,11 +1,9 @@
 package ch.puzzle.marinabackend.security;
 
-import ch.puzzle.marinabackend.KeycloakRolesExtractor;
-import org.springframework.beans.factory.annotation.Autowired;
+import ch.puzzle.marinabackend.KeycloakAuthenticationExtractor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
@@ -17,8 +15,11 @@ import java.util.stream.Collectors;
 @Component
 public class SecurityService {
 
-    @Autowired
-    private KeycloakRolesExtractor rolesExtractor;
+    private KeycloakAuthenticationExtractor rolesExtractor;
+
+    public SecurityService(KeycloakAuthenticationExtractor keycloakAuthenticationExtractor) {
+        this.rolesExtractor = keycloakAuthenticationExtractor;
+    }
 
     @SuppressWarnings("unchecked")
     public User convertPrincipal(Principal principal) {
@@ -48,9 +49,8 @@ public class SecurityService {
                 }
             }
 
-            if (auth.getDetails() instanceof OAuth2AuthenticationDetails) {
-                OAuth2AuthenticationDetails authDetails = (OAuth2AuthenticationDetails) auth.getDetails();
-                u.setBearerToken(authDetails.getTokenValue());
+            if (auth.getDetails() != null && auth.getDetails() instanceof String) {
+                u.setBearerToken((String) auth.getDetails());
             }
             return u;
         }

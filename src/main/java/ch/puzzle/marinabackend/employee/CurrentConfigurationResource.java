@@ -28,15 +28,17 @@ public class CurrentConfigurationResource {
     public static final Integer DATE_LOCK_START = 11;
     public static final Integer DATE_LOCK_END = 25;
     
-    @Autowired
     private CurrentConfigurationRepository currentConfigurationRepository;
-    
-    @Autowired
     private EmployeeRepository employeRepository;
-    
-    @Autowired
     private SecurityService securityService;
-    
+
+    public CurrentConfigurationResource(CurrentConfigurationRepository currentConfigurationRepository,
+                                        EmployeeRepository employeeRepository, SecurityService securityService) {
+        this.currentConfigurationRepository = currentConfigurationRepository;
+        this.employeRepository = employeeRepository;
+        this.securityService = securityService;
+    }
+
     @GetMapping("/configuration/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource<CurrentConfiguration>> getConfigurationOfEmployee(@PathVariable Long id) {

@@ -1,5 +1,7 @@
 package ch.puzzle.marinabackend;
 
+import ch.puzzle.marinabackend.security.jwt.JWTConfigurer;
+import ch.puzzle.marinabackend.security.jwt.TokenVerifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +15,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.context.request.RequestContextListener;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @SpringBootApplication
 @EnableAsync
@@ -24,6 +34,12 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
 
     public static void main(String[] args) {
         SpringApplication.run(MarinaBackendApplication.class, args);
+    }
+
+    private TokenVerifier tokenVerifier;
+
+    public MarinaBackendApplication(TokenVerifier tokenVerifier) {
+        this.tokenVerifier = tokenVerifier;
     }
 
     @Bean
@@ -45,13 +61,20 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
         if (!csrfEnabled) {
             http = http.csrf().disable();
         }
-        http
+        http.headers().frameOptions().disable()
+                .and()
                 .antMatcher("/**")
                 .authorizeRequests()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/**").permitAll()
                 .antMatchers("/", "/login**", "/webjars/**", "/actuator/health", "/applicationinfo").permitAll()
-                .anyRequest()
-                .authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .apply(securityConfigurerAdapter());
 
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+
+    private JWTConfigurer securityConfigurerAdapter() {
+        return new JWTConfigurer(tokenVerifier);
     }
 }

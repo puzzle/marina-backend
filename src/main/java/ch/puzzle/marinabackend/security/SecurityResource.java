@@ -1,6 +1,5 @@
 package ch.puzzle.marinabackend.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +19,11 @@ public class SecurityResource {
     @Value("${security.redirecturl.logout}")
     private String logoutUrl;
 
-    @Autowired
     private SecurityService securityService;
+
+    public SecurityResource(SecurityService securityService) {
+        this.securityService = securityService;
+    }
 
     @GetMapping("/user")
     public User getCurrentUser(Principal principal) {

@@ -38,5 +38,4 @@ public class CorsFilter implements Filter {
     @Override
     public void destroy() {
     }
-
 }

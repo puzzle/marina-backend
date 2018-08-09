@@ -34,17 +34,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 public class EmployeeResource {
 
-    @Autowired
     private EmployeeRepository employeeRepository;
-
-    @Autowired
     private MonthlyPayoutRepository monthlyPayoutRepository;
-
-    @Autowired
     private SecurityService securityService;
-    
-    @Autowired
     private ApplicationProperties applicationProperties;
+
+    public EmployeeResource(EmployeeRepository employeeRepository, MonthlyPayoutRepository monthlyPayoutRepository,
+                            SecurityService securityService, ApplicationProperties applicationProperties) {
+        this.employeeRepository = employeeRepository;
+        this.monthlyPayoutRepository = monthlyPayoutRepository;
+        this.securityService = securityService;
+        this.applicationProperties = applicationProperties;
+    }
 
     @GetMapping("/employees")
     @PreAuthorize("hasRole('ADMIN')")

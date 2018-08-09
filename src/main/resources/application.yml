@@ -1,9 +1,7 @@
 # Use application.yml only for default values, use Environment Variables to configure the application
-
 server:
   servlet:
     contextPath: /api
-
 
 # Postgresql DB default Values
 spring:
@@ -30,8 +28,8 @@ spring:
 
 # Oauth Client configuration
 security:
-  user:
-    password: password
+  basic:
+    enabled: false
   oauth2:
     client:
       clientId:
@@ -54,4 +52,3 @@ security:
     
 application:
   persistentFilePath: /tmp/marina
-

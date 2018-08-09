@@ -1,6 +1,6 @@
 package ch.puzzle.marinabackend.security;
 
-import ch.puzzle.marinabackend.KeycloakRolesExtractor;
+import ch.puzzle.marinabackend.KeycloakAuthenticationExtractor;
 import ch.puzzle.marinabackend.MarinaBackendApplication;
 import ch.puzzle.marinabackend.TestConfiguration;
 import org.junit.Before;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 public class SecurityServiceTest {
 
     @MockBean
-    private KeycloakRolesExtractor rolesExtractor;
+    private KeycloakAuthenticationExtractor rolesExtractor;
 
     @Autowired
     private SecurityService service;
