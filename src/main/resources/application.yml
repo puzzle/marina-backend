@@ -54,4 +54,18 @@ security:
     
 application:
   persistentFilePath: /tmp/marina
-
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    metrics:
+      enable: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
