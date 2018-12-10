@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        html {
+            font-family: sans-serif;
+            font-size: 13pt;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        strong, h1, h2, h3, h4, h5, h6, th {
+            font-family: sans-serif;
+        }
+
+        h1 {
+            font-size: 18pt;
+            margin-top: 35pt;
+            margin-bottom: 30pt;
+        }
+        
+        table.info {
+            width: 50%;
+            margin-bottom: 30pt;
+        }
+        
+        table.details {
+            width: 100%;
+        }
+        
+        table.details tr.title th {
+            border-bottom: 1px solid black;
+        }
+        
+        table.details tr.total th {
+            border-top: 1px solid black;
+        }
+    </style>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div class="content">
+
+    <h1 th:text="#{payout.title(${#numbers.formatDecimal(payouts[0].year, 4, 0)})}"></h1>
+    <table class="info">
+        <tr>
+            <th width="50%" th:text="#{payout.employee}"></th>
+            <td th:text="|${employee.firstName} ${employee.lastName}|"></td>
+        </tr>
+        <tr>
+            <th width="50%" th:text="#{payout.year}"></th>
+            <td th:text="${#numbers.formatDecimal(payouts[0].year, 4, 0)}"></td>
+        </tr>
+        <tr>
+            <th width="50%" th:text="#{payout.creationDate}"></th>
+            <td th:text="${#dates.format(#dates.createToday(), 'dd.MM.yyyy')}"></td>
+        </tr>
+        <tr>
+            <th width="50%" th:text="#{payout.employer}"></th>
+            <td th:text="#{payout.employerName}"></td>
+        </tr>
+    </table>
+    <table class="details">
+        <tr class="title">
+            <th width="25%" th:text="#{payout.date}"></th>
+            <th width="35%" align="right" th:text="#{payout.exchange_rate}"></th>
+            <th width="20%" align="right" th:text="#{payout.amount_chf}"></th>
+            <th width="20%" align="right" th:text="#{payout.amount_btc}"></th>
+        </tr>
+        <tr th:each="payout: ${payouts}">
+            <td th:text="${#temporals.format(payout.paymentDate, 'dd.MM.yyyy HH:mm')}"></td>
+            <td align="right" th:text="${#numbers.formatDecimal(payout.rateChf, 1, 2, 'POINT')}"></td>
+            <td align="right" th:text="${#numbers.formatDecimal(payout.amountChf, 1, 2, 'POINT')}"></td>
+            <td align="right" th:text="${#numbers.formatDecimal(@thymeleafUtils.satoshiToBitcoin(payout.amountBtc), 1, 9, 'POINT')}"></td>
+        </tr>
+        <tr class="total">
+            <th th:text="#{payout.total}"></th>
+            <th colspan="2" align="right" th:text="${#numbers.formatDecimal(totalChf, 1, 2, 'POINT')}"></th>
+            <th align="right" th:text="${#numbers.formatDecimal(@thymeleafUtils.satoshiToBitcoin(totalBtc), 1, 9, 'POINT')}"></th>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

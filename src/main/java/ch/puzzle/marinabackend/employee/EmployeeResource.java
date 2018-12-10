@@ -1,8 +1,10 @@
 package ch.puzzle.marinabackend.employee;
 
+import ch.puzzle.marinabackend.LocaleResolver;
 import ch.puzzle.marinabackend.app.ApplicationProperties;
 import ch.puzzle.marinabackend.security.SecurityService;
 import ch.puzzle.marinabackend.security.User;
+import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.hateoas.Resource;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -24,12 +27,16 @@ import java.nio.file.Paths;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_PDF;
 
 @RestController
 public class EmployeeResource {
@@ -42,9 +49,15 @@ public class EmployeeResource {
 
     @Autowired
     private SecurityService securityService;
-    
+
     @Autowired
     private ApplicationProperties applicationProperties;
+
+    @Autowired
+    private MonthlyPayoutService monthlyPayoutService;
+
+    @Autowired
+    private LocaleResolver localeResolver;
 
     @GetMapping("/employees")
     @PreAuthorize("hasRole('ADMIN')")
@@ -107,7 +120,7 @@ public class EmployeeResource {
 
         return ResponseEntity.created(location).build();
     }
-    
+
     @PostMapping("/employees/payouts")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> savePayouts(@RequestBody List<MonthlyPayoutVM> payouts) {
@@ -192,7 +205,7 @@ public class EmployeeResource {
 
         return ResponseEntity.noContent().build();
     }
-    
+
     @GetMapping("/employees/user/agreement")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity downloadAgreement(Principal principal) throws IOException {
@@ -205,7 +218,36 @@ public class EmployeeResource {
     public ResponseEntity downloadAgreement(@PathVariable Long id) throws IOException {
         return getAgreement(employeeRepository.findById(id));
     }
-    
+
+    @GetMapping("/employees/{id}/payouts/pdf/{year}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity getEmployeePayoutsSummaryPdf(HttpServletRequest request,
+                                                       @PathVariable Long id,
+                                                       @PathVariable Integer year) throws IOException, DocumentException {
+        Locale locale = localeResolver.resolveLocale(request);
+        byte[] payoutSummaryBytes = monthlyPayoutService.generatePayoutSummary(locale, id, year);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_PDF);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        headers.setAccessControlExposeHeaders(Collections.singletonList("Content-Disposition"));
+        headers.set("Content-Disposition", "attachment; filename=" + year + ".pdf");
+        return new ResponseEntity<>(payoutSummaryBytes, headers, OK);
+    }
+
+    @GetMapping("/employees/payouts/pdf/{year}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity getAllPayoutSummariesPdf(HttpServletRequest request,
+                                                   @PathVariable Integer year) throws IOException, DocumentException {
+        Locale locale = localeResolver.resolveLocale(request);
+        byte[] payoutSummaryBytes = monthlyPayoutService.generatePayoutSummaryForAllEmployees(locale, year);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_PDF);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        headers.setAccessControlExposeHeaders(Collections.singletonList("Content-Disposition"));
+        headers.set("Content-Disposition", "attachment; filename=" + year + ".pdf");
+        return new ResponseEntity<>(payoutSummaryBytes, headers, OK);
+    }
+
     private ResponseEntity getAgreement(Optional<Employee> employeeOptional) throws IOException {
         if (!employeeOptional.isPresent()) {
             return ResponseEntity.notFound().build();
