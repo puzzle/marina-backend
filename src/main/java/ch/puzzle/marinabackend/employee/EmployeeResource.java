@@ -119,7 +119,7 @@ public class EmployeeResource {
                     MonthlyPayout payout = new MonthlyPayout();
                     payout.setEmployee(byId);
                     payout.setYear(LocalDate.now().getYear());
-                    payout.setYear(LocalDate.now().getMonthValue());
+                    payout.setMonth(LocalDate.now().getMonthValue());
                     payout.setAmountChf(p.getAmountChf());
                     payout.setAmountBtc(p.getAmountBtc());
                     payout.setRateChf(p.getRateChf());
