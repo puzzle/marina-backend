@@ -35,8 +35,7 @@ pipeline {
 						        def gitRepo = sh(returnStdout: true, script: 'git config remote.origin.url').trim()
 						        def buildSelector = openshift.startBuild("marina-backend","--commit="+shortCommit, 
 						        "-e GIT_REPO_URL="+gitRepo, "-e GIT_COMMIT="+shortCommit, "-e BUILD_NUMBER=${env.BUILD_NUMBER}",
-						        "-e JOB_NAME=${env.JOB_NAME}", "-e BRANCH_NAME=${env.BRANCH_NAME}", "-e BUILD_URL=${env.BUILD_URL}",
-						        "--follow=true")
+						        "-e JOB_NAME=${env.JOB_NAME}", "-e BRANCH_NAME=${env.BRANCH_NAME}", "-e BUILD_URL=${env.BUILD_URL}")
 								timeout(10) {
                                     buildSelector.untilEach(1) {
                                         return (it.object().status.phase == "Complete")
