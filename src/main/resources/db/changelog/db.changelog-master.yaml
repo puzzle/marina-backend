@@ -1,14 +1,14 @@
 databaseChangeLog:
-   - changeSet:
+  - changeSet:
       id: createSequence
       author: philipona
       changes:
-      - createSequence:
-          cycle: false
-          incrementBy: 1
-          sequenceName: hibernate_sequence
-          startValue: 5
-   - changeSet:
+        - createSequence:
+            cycle: false
+            incrementBy: 1
+            sequenceName: hibernate_sequence
+            startValue: 5
+  - changeSet:
       id: createInitialModel
       author: phil-pona
       changes:
@@ -199,4 +199,13 @@ databaseChangeLog:
             onUpdate: RESTRICT
             referencedColumnNames: id
             referencedTableName: employee
-              
+  - changeSet:
+      id: addSocialSecurityNumber
+      author: guggero
+      changes:
+        - addColumn:
+            tableName: employee
+            columns:
+              - column:
+                  name: social_security_number
+                  type: VARCHAR(100)

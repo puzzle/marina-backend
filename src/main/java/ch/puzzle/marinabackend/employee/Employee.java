@@ -59,6 +59,9 @@ public class Employee extends AbstractEntity {
     @OneToMany(mappedBy = "employee", fetch = EAGER)
     private List<MonthlyPayout> monthlyPayouts;
 
+    @Column(name = "social_security_number")
+    private String socialSecurityNumber;
+
     public String getFirstName() {
         return firstName;
     }
@@ -129,5 +132,13 @@ public class Employee extends AbstractEntity {
 
     public void setMonthlyPayouts(List<MonthlyPayout> monthlyPayouts) {
         this.monthlyPayouts = monthlyPayouts;
+    }
+
+    public String getSocialSecurityNumber() {
+        return socialSecurityNumber;
+    }
+
+    public void setSocialSecurityNumber(String socialSecurityNumber) {
+        this.socialSecurityNumber = socialSecurityNumber;
     }
 }
