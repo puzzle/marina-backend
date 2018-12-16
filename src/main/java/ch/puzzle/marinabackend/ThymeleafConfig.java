@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 @Configuration
 @ComponentScan("ch.puzzle.marinabackend")
-public class ThymeleafConfiguration {
+public class ThymeleafConfig {
 
     @Autowired
     ApplicationContext applicationContext;
@@ -28,6 +28,7 @@ public class ThymeleafConfiguration {
         pdfTemplateResolver.setSuffix(".html");
         pdfTemplateResolver.setTemplateMode("XHTML");
         pdfTemplateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        pdfTemplateResolver.setCacheable(false);
         pdfTemplateResolver.setOrder(1);
         return pdfTemplateResolver;
     }

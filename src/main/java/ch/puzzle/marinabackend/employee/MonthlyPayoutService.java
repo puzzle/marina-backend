@@ -97,6 +97,7 @@ public class MonthlyPayoutService {
         List<MonthlyPayout> payouts = repository.findByEmployeeIdAndYearOrderByMonthDesc(employeeId, year);
         String htmlTemplate = fillHtmlTemplate(locale, employee, payouts);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
+        System.setProperty("java.protocol.handler.pkgs", "org.xhtmlrenderer.protocols");
 
         try {
             ITextRenderer renderer = new ITextRenderer();
