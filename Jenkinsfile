@@ -19,7 +19,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh './gradlew build sonarqube'
+            	withEnv(["JAVA_HOME=${tool 'jdk8_openjdk'}"]){
+                	sh './gradlew build sonarqube'
+                }
             }
         }
         stage('Build Docker Image') {
