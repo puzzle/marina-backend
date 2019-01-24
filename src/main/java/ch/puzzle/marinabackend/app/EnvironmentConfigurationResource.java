@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class EnvironmentConfigurationResource {
 
-    @Value("${application.sentryUrl}")
-    private String sentryUrl;
+    @Value("${application.sentryUrlFrontend}")
+    private String sentryUrlFrontend;
     
     @GetMapping("/environmentconfiguration")
     public EnvironmentConfiguration getApplicationInfo() {
-        return new EnvironmentConfiguration(this.sentryUrl);
+        return new EnvironmentConfiguration(this.sentryUrlFrontend);
     }
 }

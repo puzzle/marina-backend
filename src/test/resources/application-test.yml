@@ -35,6 +35,9 @@ security:
   cors:
     enable: true
     allow-origin: "*"
+    
+application:
+  sentryUrlFrontend: https://key@localhost/project
 
 logging:
   level:

@@ -2,18 +2,18 @@ package ch.puzzle.marinabackend.app;
 
 public class EnvironmentConfiguration {
     
-    private String sentryUrl;
+    private String sentryUrlFrontend;
     
-    public EnvironmentConfiguration(String sentryUrl) {
-        this.setSentryUrl(sentryUrl);
+    public EnvironmentConfiguration(String sentryUrlFrontend) {
+        this.setSentryUrlFrontend(sentryUrlFrontend);
     }
 
-    public String getSentryUrl() {
-        return sentryUrl;
+    public String getSentryUrlFrontend() {
+        return sentryUrlFrontend;
     }
 
-    public void setSentryUrl(String sentryUrl) {
-        this.sentryUrl = sentryUrl;
+    public void setSentryUrlFrontend(String sentryUrlFrontend) {
+        this.sentryUrlFrontend = sentryUrlFrontend;
     }
 
 }
