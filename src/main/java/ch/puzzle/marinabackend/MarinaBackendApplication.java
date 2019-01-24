@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.context.request.RequestContextListener;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @SpringBootApplication
 @EnableAsync
@@ -31,6 +32,12 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
     public RequestContextListener requestContextListener() {
         return new RequestContextListener();
     }
+    
+    @Bean
+    public HandlerExceptionResolver sentryExceptionResolver() {
+        return new io.sentry.spring.SentryExceptionResolver();
+    }
+
 
     @Value("${security.enable-csrf}")
     private boolean csrfEnabled;
