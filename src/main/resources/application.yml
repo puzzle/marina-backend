@@ -59,7 +59,7 @@ security:
     
 application:
   persistentFilePath: /tmp/marina
-  sentryUrlFrontend: https://key@localhost/project
+  sentryurlfrontend: https://key@localhost/project
   
 management:
   endpoints:
