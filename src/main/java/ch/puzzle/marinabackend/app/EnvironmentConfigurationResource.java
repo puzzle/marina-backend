@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class EnvironmentConfigurationResource {
 
+    private static final String SENTRY_ENVIRONMENT = "SENTRY_ENVIRONMENT";
+    
     @Value("${application.sentryurlfrontend}")
     private String sentryUrlFrontend;
     
     @GetMapping("/environmentconfiguration")
     public EnvironmentConfiguration getApplicationInfo() {
-        return new EnvironmentConfiguration(this.sentryUrlFrontend);
+        return new EnvironmentConfiguration(this.sentryUrlFrontend, System.getenv(SENTRY_ENVIRONMENT));
     }
 }
