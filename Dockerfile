@@ -1,25 +1,14 @@
-FROM centos/s2i-base-centos7
+FROM fabric8/java-centos-openjdk8-jdk
 
-# Install Java
-RUN INSTALL_PKGS="tar unzip bc which lsof java-1.8.0-openjdk java-1.8.0-openjdk-devel" && \
-    yum install -y $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS && \
-    yum clean all -y && \
-    mkdir -p /opt/s2i/destination
+MAINTAINER Thomas Philipona <philipona@puzzle.ch>
 
-EXPOSE 8080
-USER 1001
+EXPOSE 8080 9090
 
-RUN env
+RUN mkdir -p /tmp/src/
+COPY src /tmp/src/src
+COPY gradle /tmp/src/gradle
+COPY build.gradle gradlew settings.gradle /tmp/src/
 
-COPY src /opt/app-root/src/src
-COPY gradle /opt/app-root/src/gradle
-COPY build.gradle gradlew settings.gradle /opt/app-root/src/
-# build the application from source
-RUN sh /opt/app-root/src/gradlew build
+RUN cd /tmp/src && sh gradlew build
 
-USER 1001
-
-RUN mv /opt/app-root/src/build/libs/*.jar /opt/app-root/marina-backend.jar 
-
-CMD ["java", "-Xmx1024m", "-Xss1024k", "-jar", "/opt/app-root/marina-backend.jar"]
+RUN cp -a /tmp/src/build/libs/*.jar /deployments/marina-backend.jar
