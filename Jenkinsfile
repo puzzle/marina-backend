@@ -13,8 +13,8 @@ pipeline {
         string(name: 'test_project', defaultValue: 'pitc-marina-test', description: 'The OpenShift Test Project')
         string(name: 'prod_project', defaultValue: 'pitc-marina-prod', description: 'The OpenShift Prod Project')
         
-        string(name: 'openshift_cluster', defaultValue: 'OpenShiftPuzzleProduction', description: 'The OpenShift Cluster')
-        string(name: 'openshift_cluster_token', defaultValue: 'openshiftv3_prod_token_client_plugin', description: 'The OpenShift Cluster')
+        string(name: 'openshift_cluster', defaultValue: 'OpenShiftCloudscaleProduction', description: 'The OpenShift Cluster')
+        string(name: 'openshift_cluster_token', defaultValue: 'openshift_cloudscale_jenkins_cicd_prod_token_client_plugin', description: 'The OpenShift Cluster')
     }
     stages {
         stage('Build') {
