@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -246,6 +247,34 @@ public class EmployeeResource {
         headers.setAccessControlExposeHeaders(Collections.singletonList("Content-Disposition"));
         headers.set("Content-Disposition", "attachment; filename=" + year + ".pdf");
         return new ResponseEntity<>(payoutSummaryBytes, headers, OK);
+    }
+
+    @PutMapping("/employees/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity updateStatus(@PathVariable Long id, @RequestBody String status) {
+        Optional<Employee> employeeOptional = employeeRepository.findById(id);
+
+        if (!employeeOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        EmployeeStatus parsedStatus = EmployeeStatus.valueOf(status);
+        Employee employee = employeeOptional.get();
+        employee.setStatus(parsedStatus);
+
+        if (parsedStatus == EmployeeStatus.LEFT_COMPANY) {
+            employee.setAgreement(null);
+            if (employee.getCurrentConfiguration() != null) {
+                employee.getCurrentConfiguration().setAmountChf(BigDecimal.ZERO);
+                employee.getCurrentConfiguration().setBip32Node(null);
+                employee.getCurrentConfiguration().setCurrentAddress(null);
+                employee.getCurrentConfiguration().setCurrentAddressIndex(0L);
+            }
+        }
+
+        employeeRepository.save(employee);
+
+        return ResponseEntity.noContent().build();
     }
 
     private ResponseEntity getAgreement(Optional<Employee> employeeOptional) throws IOException {

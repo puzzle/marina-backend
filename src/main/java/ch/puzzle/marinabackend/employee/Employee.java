@@ -18,16 +18,6 @@ import static javax.persistence.FetchType.EAGER;
 @Entity
 @Table(name = "employee")
 public class Employee extends AbstractEntity {
-    
-    public Employee() {
-    }
-
-    public Employee(User u) {
-        firstName = u.getFirstName();
-        lastName = u.getLastName();
-        email = u.getEmail();
-        username = u.getUsername();
-    }
 
     @Column(name = "first_name")
     private String firstName;
@@ -48,7 +38,7 @@ public class Employee extends AbstractEntity {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime validatedAt;
 
-    @OneToOne(cascade = ALL, mappedBy = "employee")
+    @OneToOne(cascade = ALL, mappedBy = "employee", orphanRemoval = true)
     @RestResource(path = "employeeAgreement", rel = "agreement")
     private Agreement agreement;
 
@@ -61,6 +51,20 @@ public class Employee extends AbstractEntity {
 
     @Column(name = "social_security_number")
     private String socialSecurityNumber;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private EmployeeStatus status;
+
+    public Employee() {
+    }
+
+    public Employee(User u) {
+        firstName = u.getFirstName();
+        lastName = u.getLastName();
+        email = u.getEmail();
+        username = u.getUsername();
+    }
 
     public String getFirstName() {
         return firstName;
@@ -140,5 +144,13 @@ public class Employee extends AbstractEntity {
 
     public void setSocialSecurityNumber(String socialSecurityNumber) {
         this.socialSecurityNumber = socialSecurityNumber;
+    }
+
+    public EmployeeStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EmployeeStatus status) {
+        this.status = status;
     }
 }

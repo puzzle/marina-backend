@@ -209,3 +209,14 @@ databaseChangeLog:
               - column:
                   name: social_security_number
                   type: VARCHAR(100)
+  - changeSet:
+      id: addStatus
+      author: guggero
+      changes:
+        - addColumn:
+            tableName: employee
+            columns:
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  defaultValue: ACTIVE
