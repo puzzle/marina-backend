@@ -25,10 +25,10 @@ public class Employee extends AbstractEntity {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "brutto_salary")
@@ -49,7 +49,7 @@ public class Employee extends AbstractEntity {
     @OneToMany(mappedBy = "employee", fetch = EAGER)
     private List<MonthlyPayout> monthlyPayouts;
 
-    @Column(name = "social_security_number")
+    @Column(name = "social_security_number", unique = true)
     private String socialSecurityNumber;
 
     @Column(name = "status")
@@ -64,6 +64,7 @@ public class Employee extends AbstractEntity {
         lastName = u.getLastName();
         email = u.getEmail();
         username = u.getUsername();
+        status = EmployeeStatus.ACTIVE;
     }
 
     public String getFirstName() {
