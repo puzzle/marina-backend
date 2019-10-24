@@ -2,6 +2,8 @@ version: '3'
 services:
   marina-backend:
     image: "puzzle/marina-backend"
+    build:
+      context: .
     environment:
       - SECURITY_OAUTH2_CLIENT_CLIENTID=clientid
       - SECURITY_OAUTH2_CLIENT_CLIENTSECRET=secret

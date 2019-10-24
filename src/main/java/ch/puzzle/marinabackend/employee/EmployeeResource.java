@@ -114,7 +114,8 @@ public class EmployeeResource {
     @PostMapping("/employees")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> createEmployee(@RequestBody Employee employee) {
-        Employee savedEmployee = employeeRepository.save(employee);
+        Employee savedEmployee = employeeRepository.findByEmail(employee.getEmail())
+                .orElseGet(() -> employeeRepository.save(employee));
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedEmployee.getId()).toUri();
@@ -171,9 +172,16 @@ public class EmployeeResource {
         if (!employeeOptional.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-
-        employee.setId(id);
-        employeeRepository.save(employee);
+        employeeOptional.map(existing -> {
+            existing.setBruttoSalary(employee.getBruttoSalary());
+            existing.setEmail(employee.getEmail());
+            existing.setFirstName(employee.getFirstName());
+            existing.setLastName(employee.getLastName());
+            existing.setUsername(employee.getUsername());
+            existing.setSocialSecurityNumber(employee.getSocialSecurityNumber());
+            existing.setStatus(employee.getStatus());
+            return existing;
+        }).ifPresent(employeeRepository::save);
 
         return ResponseEntity.noContent().build();
     }
