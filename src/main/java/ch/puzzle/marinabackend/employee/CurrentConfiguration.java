@@ -5,10 +5,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Entity
 @Table(name = "current_configuration")
 public class CurrentConfiguration extends AbstractEntity {
+    private static final BigDecimal MAX_PAYOUT_PERCENTAGE = BigDecimal.valueOf(25);
+    private static final BigDecimal INCREMENT = BigDecimal.valueOf(0.05);
 
     @OneToOne
     @JoinColumn(name = "employee_id")
@@ -40,7 +43,19 @@ public class CurrentConfiguration extends AbstractEntity {
     }
 
     public BigDecimal getAmountChf() {
-        return amountChf;
+        return round(amountChf.min(getMaxPayableAmount()));
+    }
+
+    private BigDecimal getMaxPayableAmount() {
+        return employee.getBruttoSalary()
+                .divide(BigDecimal.valueOf(100))
+                .multiply(MAX_PAYOUT_PERCENTAGE)
+                .setScale(2 , RoundingMode.FLOOR);
+    }
+
+    public static BigDecimal round(BigDecimal value) {
+        BigDecimal divided = value.divide(BigDecimal.valueOf(0.05), 0, RoundingMode.FLOOR);
+        return divided.multiply(BigDecimal.valueOf(0.05));
     }
 
     public void setAmountChf(BigDecimal amountChf) {
@@ -77,5 +92,15 @@ public class CurrentConfiguration extends AbstractEntity {
 
     public void setCurrentAddressIndex(Long currentAddressIndex) {
         this.currentAddressIndex = currentAddressIndex;
+    }
+
+    public BigDecimal getPercentage() {
+        return BigDecimal.valueOf(100).divide(employee.getBruttoSalary()).multiply(amountChf);
+    }
+
+    public void setAmountChfFromPercentage(BigDecimal currentPercentage) {
+        setAmountChf(round(employee.getBruttoSalary()
+                        .divide(BigDecimal.valueOf(100))
+                        .multiply(currentPercentage.min(MAX_PAYOUT_PERCENTAGE))));
     }
 }

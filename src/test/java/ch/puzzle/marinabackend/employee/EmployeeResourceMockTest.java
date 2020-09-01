@@ -55,5 +55,4 @@ public class EmployeeResourceMockTest {
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].firstName", is(employe.getFirstName())));
     }
-
 }

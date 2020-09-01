@@ -17,8 +17,8 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {MarinaBackendApplication.class,
@@ -128,4 +128,77 @@ public class EmployeeResourceDataTest {
 
     }
 
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void shouldUpdateCurrentConfigurationAmountWhenBruttoUpdatedDown() {
+        //given
+        Employee employee = new Employee();
+        employee.setFirstName("Housi");
+        employee.setLastName("Mousi");
+        employee.setEmail("housi.mousi@marina.ch");
+        employee.setUsername("hmousi");
+        employee.setBruttoSalary(BigDecimal.valueOf(10000.00).setScale(2));
+
+        CurrentConfiguration cc = new CurrentConfiguration();
+        employee.setCurrentConfiguration(cc);
+        cc.setEmployee(employee);
+        cc.setWalletType(WalletType.MANUAL);
+        cc.setAmountChfFromPercentage(BigDecimal.valueOf(30.00)); // Will be set to 25%, that's the allowed maximum
+
+        entityManager.persist(employee);
+        entityManager.flush();
+
+        Employee originalEmployee = entityManager.find(Employee.class, employee.getId());
+        assertThat(originalEmployee.getCurrentConfiguration().getAmountChf(), is(BigDecimal.valueOf(2500.00).setScale(2)));
+
+        Employee updatedEmployee = new Employee();
+        updatedEmployee.setFirstName("Housi");
+        updatedEmployee.setLastName("Mousi");
+        updatedEmployee.setEmail("housi.mousi@marina.ch");
+        updatedEmployee.setUsername("hmousi");
+        updatedEmployee.setBruttoSalary(BigDecimal.valueOf(4000.10).setScale(2));
+
+        employeeResource.updateEmployee(updatedEmployee, employee.getId());
+
+        Employee employeeOptional = entityManager.find(Employee.class, employee.getId());
+
+        assertThat(employeeOptional.getCurrentConfiguration().getAmountChf(), is(BigDecimal.valueOf(1000.00).setScale(2)));
+    }
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void shouldUpdateCurrentConfigurationAmountWhenBruttoUpdatedUp() {
+        //given
+        Employee employee = new Employee();
+        employee.setFirstName("Housi");
+        employee.setLastName("Mousi");
+        employee.setEmail("housi.mousi@marina.ch");
+        employee.setUsername("hmousi");
+        employee.setBruttoSalary(BigDecimal.valueOf(4000.00).setScale(2));
+
+        CurrentConfiguration cc = new CurrentConfiguration();
+        employee.setCurrentConfiguration(cc);
+        cc.setEmployee(employee);
+        cc.setWalletType(WalletType.MANUAL);
+        cc.setAmountChfFromPercentage(BigDecimal.valueOf(30.00)); // Will be set to 25%, that's the allowed maximum
+
+        entityManager.persist(employee);
+        entityManager.flush();
+
+        Employee originalEmployee = entityManager.find(Employee.class, employee.getId());
+        assertThat(originalEmployee.getCurrentConfiguration().getAmountChf(), is(BigDecimal.valueOf(1000.00).setScale(2)));
+
+        Employee updatedEmployee = new Employee();
+        updatedEmployee.setFirstName("Housi");
+        updatedEmployee.setLastName("Mousi");
+        updatedEmployee.setEmail("housi.mousi@marina.ch");
+        updatedEmployee.setUsername("hmousi");
+        updatedEmployee.setBruttoSalary(BigDecimal.valueOf(20000.10).setScale(2));
+
+        employeeResource.updateEmployee(updatedEmployee, employee.getId());
+
+        Employee employeeOptional = entityManager.find(Employee.class, employee.getId());
+
+        assertThat(employeeOptional.getCurrentConfiguration().getAmountChf(), is(BigDecimal.valueOf(5000.00).setScale(2)));
+    }
 }

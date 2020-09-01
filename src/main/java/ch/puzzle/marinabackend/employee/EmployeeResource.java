@@ -173,6 +173,10 @@ public class EmployeeResource {
             return ResponseEntity.notFound().build();
         }
         employeeOptional.map(existing -> {
+            BigDecimal currentPercentage = BigDecimal.ZERO;
+            if (existing.getCurrentConfiguration() != null) {
+                currentPercentage = existing.getCurrentConfiguration().getPercentage();
+            }
             existing.setBruttoSalary(employee.getBruttoSalary());
             existing.setEmail(employee.getEmail());
             existing.setFirstName(employee.getFirstName());
@@ -180,6 +184,9 @@ public class EmployeeResource {
             existing.setUsername(employee.getUsername());
             existing.setSocialSecurityNumber(employee.getSocialSecurityNumber());
             existing.setStatus(employee.getStatus());
+            if (existing.getCurrentConfiguration() != null) {
+                existing.getCurrentConfiguration().setAmountChfFromPercentage(currentPercentage);
+            }
             return existing;
         }).ifPresent(employeeRepository::save);
 
