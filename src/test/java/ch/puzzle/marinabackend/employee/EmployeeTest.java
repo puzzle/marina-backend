@@ -4,7 +4,12 @@ import ch.puzzle.marinabackend.security.SecurityTestUtils;
 import ch.puzzle.marinabackend.security.User;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class EmployeeTest {
 
@@ -27,4 +32,30 @@ public class EmployeeTest {
         assertEquals(e.getModifiedDate(), null);
     }
 
+    @Test
+    public void shouldRoundPayoutToFloor5Cts() {
+
+        CurrentConfiguration cc = new CurrentConfiguration();
+        cc.setAmountChf(BigDecimal.valueOf(1000.49));
+        Employee e = new Employee();
+        e.setBruttoSalary(BigDecimal.valueOf(5000));
+        cc.setEmployee(e);
+
+        assertThat(cc.getAmountChf(), is(BigDecimal.valueOf(1000.45)));
+
+    }
+
+
+    @Test
+    public void shouldRoundPayoutToFloor25PercentBruttoSalary() {
+
+        CurrentConfiguration cc = new CurrentConfiguration();
+        cc.setAmountChf(BigDecimal.valueOf(2000.49));
+        Employee e = new Employee();
+        e.setBruttoSalary(BigDecimal.valueOf(4000.10));
+        cc.setEmployee(e);
+
+        assertThat(cc.getAmountChf(), is(BigDecimal.valueOf(1000.00).setScale(2, RoundingMode.FLOOR)));
+
+    }
 }
