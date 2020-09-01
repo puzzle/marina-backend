@@ -2,6 +2,7 @@ package ch.puzzle.marinabackend.employee;
 
 import ch.puzzle.marinabackend.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -94,10 +95,12 @@ public class CurrentConfiguration extends AbstractEntity {
         this.currentAddressIndex = currentAddressIndex;
     }
 
+    @JsonIgnore
     public BigDecimal getPercentage() {
         return BigDecimal.valueOf(100).divide(employee.getBruttoSalary()).multiply(amountChf);
     }
 
+    @JsonIgnore
     public void setAmountChfFromPercentage(BigDecimal currentPercentage) {
         setAmountChf(round(employee.getBruttoSalary()
                         .divide(BigDecimal.valueOf(100))
