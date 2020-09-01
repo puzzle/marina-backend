@@ -97,7 +97,11 @@ public class CurrentConfiguration extends AbstractEntity {
 
     @JsonIgnore
     public BigDecimal getPercentage() {
-        return BigDecimal.valueOf(100).divide(employee.getBruttoSalary()).multiply(amountChf);
+        if (employee.getBruttoSalary() != null && !employee.getBruttoSalary().equals(BigDecimal.ZERO)) {
+            return BigDecimal.valueOf(100).divide(employee.getBruttoSalary()).multiply(amountChf);
+        } else {
+            return BigDecimal.ZERO;
+        }
     }
 
     @JsonIgnore
