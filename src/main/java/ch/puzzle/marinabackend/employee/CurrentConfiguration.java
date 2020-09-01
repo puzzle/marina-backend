@@ -54,8 +54,8 @@ public class CurrentConfiguration extends AbstractEntity {
     }
 
     public static BigDecimal round(BigDecimal value) {
-        BigDecimal divided = value.divide(BigDecimal.valueOf(0.05), 0, RoundingMode.FLOOR);
-        return divided.multiply(BigDecimal.valueOf(0.05));
+        BigDecimal divided = value.divide(INCREMENT, 0, RoundingMode.FLOOR);
+        return divided.multiply(INCREMENT);
     }
 
     public void setAmountChf(BigDecimal amountChf) {
