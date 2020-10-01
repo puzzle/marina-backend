@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 
 @Entity
@@ -98,7 +99,10 @@ public class CurrentConfiguration extends AbstractEntity {
     @JsonIgnore
     public BigDecimal getPercentage() {
         if (employee.getBruttoSalary() != null && !employee.getBruttoSalary().equals(BigDecimal.ZERO)) {
-            return BigDecimal.valueOf(100).divide(employee.getBruttoSalary()).multiply(amountChf);
+            return BigDecimal.valueOf(100)
+                    .divide(employee.getBruttoSalary(), 10, RoundingMode.FLOOR)
+                    .multiply(amountChf)
+                    .setScale(0 , RoundingMode.FLOOR);
         } else {
             return BigDecimal.ZERO;
         }
@@ -107,7 +111,7 @@ public class CurrentConfiguration extends AbstractEntity {
     @JsonIgnore
     public void setAmountChfFromPercentage(BigDecimal currentPercentage) {
         setAmountChf(round(employee.getBruttoSalary()
-                        .divide(BigDecimal.valueOf(100))
+                        .divide(BigDecimal.valueOf(100),10, RoundingMode.FLOOR)
                         .multiply(currentPercentage.min(MAX_PAYOUT_PERCENTAGE))));
     }
 }
