@@ -2,7 +2,7 @@ Travis [![Build Status](https://travis-ci.org/puzzle/marina-backend.svg?branch=m
 
 # Marina Backend
 
-This Springboot application provides the backend to the marina gui application
+This Springboot application provides the backend to the [marina gui application](https://github.com/puzzle/marina-gui)
 
 ## Start Application with Docker pure
 
@@ -22,7 +22,7 @@ or use `docker-compose up` to do all together with docker-compose
 
 ## Database changes
 
-We use Lliquibase to manage the database scheme and changes
+We use Liquibase to manage the database scheme and changes
 
 ## Dev Environment
 
