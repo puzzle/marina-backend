@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 
 @Entity
@@ -45,6 +44,9 @@ public class CurrentConfiguration extends AbstractEntity {
     }
 
     public BigDecimal getAmountChf() {
+        if (amountChf == null) {
+            return null;
+        }
         return round(amountChf.min(getMaxPayableAmount()));
     }
 
