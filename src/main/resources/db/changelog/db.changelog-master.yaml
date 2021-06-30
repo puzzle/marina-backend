@@ -220,3 +220,16 @@ databaseChangeLog:
                   name: status
                   type: VARCHAR(50)
                   defaultValue: ACTIVE
+  - changeSet:
+      id: fixEmployeeUniqueConstraints
+      author: q-src
+      changes:
+        - addUniqueConstraint:
+            tableName: employee
+            columnNames: username
+        - addUniqueConstraint:
+            tableName: employee
+            columnNames: email
+        - addUniqueConstraint:
+            tableName: employee
+            columnNames: social_security_number
