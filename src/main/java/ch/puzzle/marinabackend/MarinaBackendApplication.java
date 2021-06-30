@@ -45,7 +45,7 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
 
 
 
-    @Value("${security.enable-csrf}")
+    @Value("${application.security.enable-csrf}")
     private boolean csrfEnabled;
 
     @Override
@@ -61,7 +61,7 @@ public class MarinaBackendApplication extends WebSecurityConfigurerAdapter {
         http
                 .antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/**").permitAll()
+                .antMatchers("/swagger-ui/**", "/swagger-resources/**", "/v2/**").permitAll()
                 .antMatchers("/", "/login**", "/webjars/**", "/actuator/health", "/actuator/prometheus", "/applicationinfo").permitAll()
                 .anyRequest()
                 .authenticated();

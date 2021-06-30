@@ -7,8 +7,8 @@ import ch.puzzle.marinabackend.security.User;
 import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +34,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_PDF;
 
@@ -68,15 +68,15 @@ public class EmployeeResource {
 
     @GetMapping("/employees/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Resource<Employee>> getEmployee(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Employee>> getEmployee(@PathVariable Long id) {
         Optional<Employee> employee = employeeRepository.findById(id);
 
         if (!employee.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        Resource<Employee> resource = new Resource<>(employee.get());
+        EntityModel<Employee> resource = new EntityModel<>(employee.get());
 
-        ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).getEmployees());
+        WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).getEmployees());
         resource.add(linkTo.withRel("all-employees"));
 
         return ResponseEntity.ok(resource);
@@ -84,15 +84,15 @@ public class EmployeeResource {
 
     @GetMapping("/employees/email")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Resource<Employee>> getEmployeeByEmail(@Param("email") String email) {
+    public ResponseEntity<EntityModel<Employee>> getEmployeeByEmail(@Param("email") String email) {
         Optional<Employee> employee = employeeRepository.findByEmail(email);
 
         if (!employee.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        Resource<Employee> resource = new Resource<>(employee.get());
+        EntityModel<Employee> resource = new EntityModel<>(employee.get());
 
-        ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).getEmployees());
+        WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).getEmployees());
         resource.add(linkTo.withRel("all-employees"));
 
         return ResponseEntity.ok(resource);
@@ -100,7 +100,7 @@ public class EmployeeResource {
 
     @GetMapping("/employees/user")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Resource<Employee>> getEmployeeByLoggedInUser(Principal principal) {
+    public ResponseEntity<EntityModel<Employee>> getEmployeeByLoggedInUser(Principal principal) {
         User loggedInUser = securityService.convertPrincipal(principal);
         return getEmployeeByEmail(loggedInUser.getEmail());
     }

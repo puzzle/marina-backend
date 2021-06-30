@@ -2,26 +2,29 @@ package ch.puzzle.marinabackend.employee;
 
 import ch.puzzle.marinabackend.MarinaBackendApplication;
 import ch.puzzle.marinabackend.TestConfiguration;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
+;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {MarinaBackendApplication.class,
         TestConfiguration.class}, webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -73,7 +76,7 @@ public class EmployeeResourceDataTest {
         entityManager.flush();
 
         //when
-        ResponseEntity<Resource<Employee>> result = employeeResource.getEmployeeByEmail("housi.mousi@marina.ch");
+        ResponseEntity<EntityModel<Employee>> result = employeeResource.getEmployeeByEmail("housi.mousi@marina.ch");
 
         //then
         assertNotNull(result);
@@ -95,7 +98,7 @@ public class EmployeeResourceDataTest {
         entityManager.flush();
 
         //when
-        ResponseEntity<Resource<Employee>> result = employeeResource.getEmployeeByEmail("not.housi.mousi@marina.ch");
+        ResponseEntity<EntityModel<Employee>> result = employeeResource.getEmployeeByEmail("not.housi.mousi@marina.ch");
 
         //then
         assertEquals(ResponseEntity.notFound().build(), result);
@@ -122,7 +125,7 @@ public class EmployeeResourceDataTest {
         entityManager.flush();
 
         //when
-        ResponseEntity<Resource<Employee>> result = employeeResource.getEmployee(employee.getId());
+        ResponseEntity<EntityModel<Employee>> result = employeeResource.getEmployee(employee.getId());
 
         //then
         assertEquals(employee, result.getBody().getContent());
@@ -204,8 +207,8 @@ public class EmployeeResourceDataTest {
         assertThat(employeeOptional.getCurrentConfiguration().getAmountChf(), is(BigDecimal.valueOf(5000.00).setScale(2)));
     }
 
-    @Test(expected = PersistenceException.class)
-    public void shouldPreventDuplicateEmail() throws Exception {
+    @Test
+    public void shouldPreventDuplicateEmail() {
         //given
         Employee employee = new Employee();
         employee.setFirstName("Housi");
@@ -226,11 +229,12 @@ public class EmployeeResourceDataTest {
         duplicate.setUsername(employee.getSocialSecurityNumber() + "different");
         duplicate.setBruttoSalary(employee.getBruttoSalary());
         entityManager.persist(duplicate);
-        entityManager.flush();
+
+        assertThrows(PersistenceException.class, () -> entityManager.flush());
     }
 
-    @Test(expected = PersistenceException.class)
-    public void shouldPreventDuplicateUsername() throws Exception {
+    @Test
+    public void shouldPreventDuplicateUsername() {
         //given
         Employee employee = new Employee();
         employee.setFirstName("Housi");
@@ -251,11 +255,12 @@ public class EmployeeResourceDataTest {
         duplicate.setSocialSecurityNumber(employee.getSocialSecurityNumber() + "different");
         duplicate.setBruttoSalary(employee.getBruttoSalary());
         entityManager.persist(duplicate);
-        entityManager.flush();
+
+        assertThrows(PersistenceException.class, () -> entityManager.flush());
     }
 
-    @Test(expected = PersistenceException.class)
-    public void shouldPreventDuplicateSocialSecurityNumber() throws Exception {
+    @Test
+    public void shouldPreventDuplicateSocialSecurityNumber() {
         //given
         Employee employee = new Employee();
         employee.setFirstName("Housi");
@@ -276,6 +281,7 @@ public class EmployeeResourceDataTest {
         duplicate.setSocialSecurityNumber(employee.getSocialSecurityNumber());
         duplicate.setBruttoSalary(employee.getBruttoSalary());
         entityManager.persist(duplicate);
-        entityManager.flush();
+
+        assertThrows(PersistenceException.class, () -> entityManager.flush());
     }
 }

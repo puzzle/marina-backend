@@ -5,9 +5,9 @@ import ch.puzzle.marinabackend.TestConfiguration;
 import ch.puzzle.marinabackend.security.SecurityService;
 import ch.puzzle.marinabackend.security.SecurityTestUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -32,10 +32,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {MarinaBackendApplication.class, TestConfiguration.class},
         webEnvironment = WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc(secure = true)
+@AutoConfigureMockMvc()
 @ActiveProfiles("test")
 public class EmployeeResourceTest {
 
@@ -52,7 +52,7 @@ public class EmployeeResourceTest {
 
     private Employee housi;
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         housi = new Employee();
         housi.setId(Long.valueOf(1));

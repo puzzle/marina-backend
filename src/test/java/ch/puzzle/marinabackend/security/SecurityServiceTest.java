@@ -3,9 +3,9 @@ package ch.puzzle.marinabackend.security;
 import ch.puzzle.marinabackend.KeycloakRolesExtractor;
 import ch.puzzle.marinabackend.MarinaBackendApplication;
 import ch.puzzle.marinabackend.TestConfiguration;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,19 +15,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {MarinaBackendApplication.class, TestConfiguration.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc(secure = true)
+@AutoConfigureMockMvc()
 @ActiveProfiles("test")
 public class SecurityServiceTest {
 
@@ -36,10 +36,10 @@ public class SecurityServiceTest {
 
     @Autowired
     private SecurityService service;
-    
+
     private OAuth2Authentication principal;
 
-    @Before
+    @BeforeEach
     public void setup() {
         principal = SecurityTestUtils.getTestOAuth2Authentication();
     }
@@ -73,7 +73,6 @@ public class SecurityServiceTest {
 
         // then
         assertNull(u);
-
     }
 
     @Test

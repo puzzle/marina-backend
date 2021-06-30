@@ -14,10 +14,10 @@ import java.security.Principal;
 @RestController
 public class SecurityResource {
 
-    @Value("${security.redirecturl.frontend}")
+    @Value("${application.security.redirecturl.frontend}")
     private String projectUrl;
 
-    @Value("${security.redirecturl.logout}")
+    @Value("${application.security.redirecturl.logout}")
     private String logoutUrl;
 
     @Autowired

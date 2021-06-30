@@ -10,10 +10,10 @@ import java.io.IOException;
 @Component
 public class CorsFilter implements Filter {
 
-    @Value("${security.cors.enable}")
+    @Value("${application.security.cors.enable}")
     private boolean enableCors;
 
-    @Value("${security.cors.allow-origin}")
+    @Value("${application.security.cors.allow-origin}")
     private String allowOrigin;
 
     @Override
