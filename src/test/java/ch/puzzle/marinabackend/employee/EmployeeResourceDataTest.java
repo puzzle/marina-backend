@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 
@@ -165,6 +166,7 @@ public class EmployeeResourceDataTest {
 
         assertThat(employeeOptional.getCurrentConfiguration().getAmountChf(), is(BigDecimal.valueOf(1000.00).setScale(2)));
     }
+
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void shouldUpdateCurrentConfigurationAmountWhenBruttoUpdatedUp() {
@@ -200,5 +202,80 @@ public class EmployeeResourceDataTest {
         Employee employeeOptional = entityManager.find(Employee.class, employee.getId());
 
         assertThat(employeeOptional.getCurrentConfiguration().getAmountChf(), is(BigDecimal.valueOf(5000.00).setScale(2)));
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void shouldPreventDuplicateEmail() throws Exception {
+        //given
+        Employee employee = new Employee();
+        employee.setFirstName("Housi");
+        employee.setLastName("Mousi");
+        employee.setEmail("housi.mousi@marina.ch");
+        employee.setSocialSecurityNumber("000.0000.0000.00");
+        employee.setUsername("hmousi");
+        employee.setBruttoSalary(BigDecimal.valueOf(1000.45));
+        entityManager.persist(employee);
+        entityManager.flush();
+
+        //when
+        Employee duplicate = new Employee();
+        duplicate.setFirstName(employee.getFirstName());
+        duplicate.setLastName(employee.getLastName());
+        duplicate.setEmail(employee.getEmail());
+        duplicate.setUsername(employee.getUsername() + "different");
+        duplicate.setUsername(employee.getSocialSecurityNumber() + "different");
+        duplicate.setBruttoSalary(employee.getBruttoSalary());
+        entityManager.persist(duplicate);
+        entityManager.flush();
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void shouldPreventDuplicateUsername() throws Exception {
+        //given
+        Employee employee = new Employee();
+        employee.setFirstName("Housi");
+        employee.setLastName("Mousi");
+        employee.setEmail("housi.mousi@marina.ch");
+        employee.setSocialSecurityNumber("000.0000.0000.00");
+        employee.setUsername("hmousi");
+        employee.setBruttoSalary(BigDecimal.valueOf(1000.45));
+        entityManager.persist(employee);
+        entityManager.flush();
+
+        //when
+        Employee duplicate = new Employee();
+        duplicate.setFirstName(employee.getFirstName());
+        duplicate.setLastName(employee.getLastName());
+        duplicate.setEmail(employee.getEmail() + "different");
+        duplicate.setUsername(employee.getUsername());
+        duplicate.setSocialSecurityNumber(employee.getSocialSecurityNumber() + "different");
+        duplicate.setBruttoSalary(employee.getBruttoSalary());
+        entityManager.persist(duplicate);
+        entityManager.flush();
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void shouldPreventDuplicateSocialSecurityNumber() throws Exception {
+        //given
+        Employee employee = new Employee();
+        employee.setFirstName("Housi");
+        employee.setLastName("Mousi");
+        employee.setEmail("housi.mousi@marina.ch");
+        employee.setSocialSecurityNumber("000.0000.0000.00");
+        employee.setUsername("hmousi");
+        employee.setBruttoSalary(BigDecimal.valueOf(1000.45));
+        entityManager.persist(employee);
+        entityManager.flush();
+
+        //when
+        Employee duplicate = new Employee();
+        duplicate.setFirstName(employee.getFirstName());
+        duplicate.setLastName(employee.getLastName());
+        duplicate.setEmail(employee.getEmail() + "different");
+        duplicate.setUsername(employee.getUsername() + "different");
+        duplicate.setSocialSecurityNumber(employee.getSocialSecurityNumber());
+        duplicate.setBruttoSalary(employee.getBruttoSalary());
+        entityManager.persist(duplicate);
+        entityManager.flush();
     }
 }
