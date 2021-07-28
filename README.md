@@ -29,8 +29,11 @@ We use Liquibase to manage the database scheme and changes
 To start the application in local development mode:
 
 ```bash
+docker-compose up -d
 SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
 ```
+
+For further details on the development envirionment, please see the [corresponding documentation](devenv).
 
 ### Postgresql DB
 
