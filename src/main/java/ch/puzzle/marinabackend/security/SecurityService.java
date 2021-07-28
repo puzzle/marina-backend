@@ -32,11 +32,11 @@ public class SecurityService {
                 if (userAuthentication.getDetails() instanceof Map<?, ?>) {
                     Map<String, Object> details = (Map<String, Object>) userAuthentication.getDetails();
 
-                    u.setId(details.get("sub").toString());
-                    u.setUsername(details.get("preferred_username").toString());
-                    u.setEmail(details.get("email").toString());
-                    u.setFirstName(details.get("given_name").toString());
-                    u.setLastName(details.get("family_name").toString());
+                    u.setId(String.format("%s", details.get("sub")));
+                    u.setUsername(String.format("%s", details.get("preferred_username")));
+                    u.setEmail(String.format("%s", details.get("email")));
+                    u.setFirstName(String.format("%s", details.get("given_name")));
+                    u.setLastName(String.format("%s", details.get("family_name")));
                     List<GrantedAuthority> authorities = rolesExtractor.extractAuthorities(details);
                     if (authorities != null) {
                         Set<String> stringAuthorities = authorities
