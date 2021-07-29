@@ -13,7 +13,7 @@ docker-compose up -d
 SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
 ```
 
-For further details on the development envirionment, please see the [corresponding documentation](devenv).
+For further details on the development environment, please see the [corresponding documentation](devenv).
 
 ## Start Application with Docker pure
 
