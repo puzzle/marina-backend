@@ -1,43 +1,45 @@
 version: '3'
 services:
-  marina-backend:
-    image: "puzzle/marina-backend"
-    build:
-      context: .
-    environment:
-      - SECURITY_OAUTH2_CLIENT_CLIENTID=clientid
-      - SECURITY_OAUTH2_CLIENT_CLIENTSECRET=secret
-      - SECURITY_OAUTH2_CLIENT_ACCESSTOKENURI=localhost
-      - SECURITY_OAUTH2_CLIENT_USERAUTHORIZATIONURI=localhost
-      - SECURITY_OAUTH2_RESOURCE_USERINFOURI=localhost
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresqldb:5432/marina
-      - SPRING_DATASOURCE_PASSWORD=marina
-      - SPRING_DATASOURCE_USERNAME=marina
-    ports:
-     - "8080:8080"
-    links:
-     - postgresqldb
 
-  postgresqldb:
-    image: "centos/postgresql-96-centos7"
-    environment:
-      - POSTGRESQL_USER=marina
-      - POSTGRESQL_PASSWORD=marina
-      - POSTGRESQL_DATABASE=marina
-    volumes:
-      - 'posgresql-data:/var/lib/pgsql/data'
-
-  postgresql-localdev:
+  marina-db:
+    image: centos/postgresql-96-centos7
     restart: unless-stopped
     ports:
-      - "5432:5432"
-    image: "centos/postgresql-96-centos7"
+      - ${DB_PORT:-5432}:5432
     environment:
+      - POSTGRESQL_DATABASE=marina
       - POSTGRESQL_USER=marina
       - POSTGRESQL_PASSWORD=marina
-      - POSTGRESQL_DATABASE=marina
     volumes:
-      - 'posgresql-data:/var/lib/pgsql/data'
+      - marina-data:/var/lib/pgsql/data
+
+  keycloak:
+    image: jboss/keycloak:14.0.0
+    restart: unless-stopped
+    ports:
+      - ${KEYCLOAK_PORT:-8090}:8080
+    depends_on:
+      - keycloak-db
+    environment:
+      - DB_ADDR=keycloak-db
+      - DB_VENDOR=postgres
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/realm-export.json
+    volumes:
+      - ./devenv/keycloak/realm-export.json:/realm-export.json
+      - ./devenv/keycloak/create-users.sh:/opt/jboss/startup-scripts/create-users.sh:ro
+
+  keycloak-db:
+    image: centos/postgresql-96-centos7
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_DATABASE=keycloak
+      - POSTGRESQL_USER=keycloak
+      - POSTGRESQL_PASSWORD=password
+    volumes:
+      - keycloak-data:/var/lib/pgsql/data
 
 volumes:
-  posgresql-data:
+  marina-data:
+  keycloak-data:

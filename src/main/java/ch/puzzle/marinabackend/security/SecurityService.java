@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,11 +33,12 @@ public class SecurityService {
                 if (userAuthentication.getDetails() instanceof Map<?, ?>) {
                     Map<String, Object> details = (Map<String, Object>) userAuthentication.getDetails();
 
-                    u.setId(details.get("sub").toString());
-                    u.setUsername(details.get("preferred_username").toString());
-                    u.setEmail(details.get("email").toString());
-                    u.setFirstName(details.get("given_name").toString());
-                    u.setLastName(details.get("family_name").toString());
+                    u.setId(String.format("%s", details.get("sub")));
+                    final String username = String.format("%s", details.get("preferred_username"));
+                    u.setUsername(username);
+                    u.setEmail(String.format("%s", Optional.ofNullable(details.get("email")).orElse(username)));
+                    u.setFirstName(String.format("%s", Optional.ofNullable(details.get("given_name")).orElse(username)));
+                    u.setLastName(String.format("%s", Optional.ofNullable(details.get("family_name")).orElse(username)));
                     List<GrantedAuthority> authorities = rolesExtractor.extractAuthorities(details);
                     if (authorities != null) {
                         Set<String> stringAuthorities = authorities
