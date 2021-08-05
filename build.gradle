@@ -53,7 +53,6 @@ bootJar {
 }
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-data-rest')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -64,7 +63,6 @@ dependencies {
     compile('org.springframework.hateoas:spring-hateoas')
     compile('org.liquibase:liquibase-core')
     compile('com.fasterxml.jackson.datatype:jackson-datatype-hibernate5')
-    compile('io.springfox:springfox-data-rest:3.0.0')
     compile('org.xhtmlrenderer:flying-saucer-pdf:9.1.16')
     compile('io.sentry:sentry-spring:1.7.20')
     compileOnly('org.springframework.boot:spring-boot-configuration-processor')
