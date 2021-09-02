@@ -32,23 +32,28 @@ spring:
     enabled: true
     prefix: classpath:/pdf/
     suffix: .html
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            clientId: marina
+            clientSecret: 58554ee9-f3be-44a4-989c-578095ec8f1e
+            clientName: Keycloak
+            authorizationGrantType: authorization_code
+            tokenName: access_token
+            redirectUri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            redirectUriTemplate: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - openid
 
-# Oauth Client configuration default values
-security:
-  user:
-    password: password
-  oauth2:
-    client:
-      clientId: marina
-      clientSecret: 58554ee9-f3be-44a4-989c-578095ec8f1e
-      accessTokenUri: http://localhost:8090/auth/realms/devenv/protocol/openid-connect/token
-      userAuthorizationUri: http://localhost:8090/auth/realms/devenv/protocol/openid-connect/auth
-      tokenName: access_token
-      authenticationScheme: header
-      clientAuthenticationScheme: header
-    resource:
-      userInfoUri: http://localhost:8090/auth/realms/devenv/protocol/openid-connect/userinfo
-
+        provider:
+          keycloak:
+            authorizationUri: http://localhost:8090/auth/realms/devenv/protocol/openid-connect/auth
+            tokenUri: http://localhost:8090/auth/realms/devenv/protocol/openid-connect/token
+            userInfoUri: http://localhost:8090/auth/realms/devenv/protocol/openid-connect/userinfo
+            jwkSetUri: http://localhost:8090/auth/realms/devenv/protocol/openid-connect/certs
+            userNameAttribute: preferred_username
 
 application:
   persistentFilePath: /tmp/marina

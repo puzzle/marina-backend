@@ -62,7 +62,7 @@ public class SecurityResourceTest {
     public void unauthorizedUserRequestsShouldnotBeAllowed() throws Exception {
         mvc.perform(get("/user").contentType(APPLICATION_JSON))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("http://*/login"));
+                .andExpect(redirectedUrlPattern("http://*/oauth2/authorization/keycloak"));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class SecurityResourceTest {
     public void unauthorizedRequestsShouldnotBeAllowed() throws Exception {
         mvc.perform(get("/sso").contentType(APPLICATION_JSON))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("http://*/login"));
+                .andExpect(redirectedUrlPattern("http://*/oauth2/authorization/keycloak"));
     }
 
 }

@@ -16,19 +16,26 @@ spring:
       password: password
     oauth2:
       client:
-        client-id: clientid
-        client-secret: secret
-        accessTokenUri: https://localhost/token
-        userAuthorizationUri: https://localhost/auth
-        tokenName: access_token
-        authenticationScheme: header
-        clientAuthenticationScheme: header
-      resource:
-        userInfoUri: https://localhost/userinfo
-      authorization:
-        checkTokenAccess: isAuthenticated()
+        registration:
+          keycloak:
+            clientId: clientid
+            clientSecret: secret
+            clientName: Keycloak
+            authorizationGrantType: authorization_code
+            tokenName: access_token
+            redirectUri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            redirectUriTemplate: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - openid
 
-    
+        provider:
+          keycloak:
+            authorizationUri: https://localhost/auth
+            tokenUri: https://localhost/token
+            userInfoUri: https://localhost/userinfo
+            jwkSetUri: http://localhost:8090/auth/realms/devenv/protocol/openid-connect/certs
+            userNameAttribute: preferred_username
+
 application:
   sentryUrlFrontend: https://key@localhost/project
   security:

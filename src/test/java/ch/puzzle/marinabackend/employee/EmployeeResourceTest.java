@@ -66,11 +66,11 @@ public class EmployeeResourceTest {
         // Redirect to login
         mvc.perform(get("/employees").contentType(APPLICATION_JSON))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("http://*/login"));
+                .andExpect(redirectedUrlPattern("http://*/oauth2/authorization/keycloak"));
 
         mvc.perform(get("/employees/1").contentType(APPLICATION_JSON))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("http://*/login"));
+                .andExpect(redirectedUrlPattern("http://*/oauth2/authorization/keycloak"));
     }
 
     @Test

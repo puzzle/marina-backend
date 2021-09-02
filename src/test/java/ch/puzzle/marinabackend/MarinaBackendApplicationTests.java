@@ -12,9 +12,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {MarinaBackendApplication.class,
@@ -40,9 +40,8 @@ public class MarinaBackendApplicationTests {
     }
 
     @Test
-    public void loginShouldRedirectToSso() throws Exception {
-        mvc.perform(get("/login").accept(MediaType.APPLICATION_JSON)).andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("http://**/auth**http://**"));
+    public void loginShouldAskForOAuthClient() throws Exception {
+        mvc.perform(get("/login").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(content().string(containsString("oauth2/authorization/keycloak")));
     }
-
 }
