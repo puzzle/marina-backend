@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,20 +39,20 @@ public class CurrentConfigurationResource {
     
     @GetMapping("/configuration/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Resource<CurrentConfiguration>> getConfigurationOfEmployee(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<CurrentConfiguration>> getConfigurationOfEmployee(@PathVariable Long id) {
         Optional<Employee> employee = employeRepository.findById(id);
 
         if (!employee.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        Resource<CurrentConfiguration> resource = new Resource<>(employee.get().getCurrentConfiguration());
+        EntityModel<CurrentConfiguration> resource = new EntityModel<>(employee.get().getCurrentConfiguration());
 
         return ResponseEntity.ok(resource);
     }
     
     @GetMapping("/configuration/my")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Resource<CurrentConfiguration>> getMyConfiguration(Principal principal) {
+    public ResponseEntity<EntityModel<CurrentConfiguration>> getMyConfiguration(Principal principal) {
         User convertPrincipal = securityService.convertPrincipal(principal);
         // find employee by email address
         Optional<Employee> employeeOptional = employeRepository.findByEmail(convertPrincipal.getEmail());
@@ -70,7 +70,7 @@ public class CurrentConfigurationResource {
             employee = employeRepository.save(employee);
         }
 
-        Resource<CurrentConfiguration> resource = new Resource<>(employee.getCurrentConfiguration());
+        EntityModel<CurrentConfiguration> resource = new EntityModel<>(employee.getCurrentConfiguration());
 
         return ResponseEntity.ok(resource);
     }

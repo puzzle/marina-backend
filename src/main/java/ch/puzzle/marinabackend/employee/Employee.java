@@ -3,9 +3,7 @@ package ch.puzzle.marinabackend.employee;
 import ch.puzzle.marinabackend.AbstractEntity;
 import ch.puzzle.marinabackend.LocalDateTimeSerializer;
 import ch.puzzle.marinabackend.security.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -39,11 +37,9 @@ public class Employee extends AbstractEntity {
     private LocalDateTime validatedAt;
 
     @OneToOne(cascade = ALL, mappedBy = "employee", orphanRemoval = true)
-    @RestResource(path = "employeeAgreement", rel = "agreement")
     private Agreement agreement;
 
     @OneToOne(cascade = ALL, mappedBy = "employee")
-    @RestResource(path = "employeeCurrentConfiguration", rel = "currentConfiguration")
     private CurrentConfiguration currentConfiguration;
 
     @OneToMany(mappedBy = "employee", fetch = EAGER)

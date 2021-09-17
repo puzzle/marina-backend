@@ -2,14 +2,14 @@ package ch.puzzle.marinabackend.employee;
 
 import ch.puzzle.marinabackend.security.SecurityTestUtils;
 import ch.puzzle.marinabackend.security.User;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EmployeeTest {
 

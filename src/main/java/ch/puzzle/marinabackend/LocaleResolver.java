@@ -9,7 +9,7 @@ import java.util.Locale;
 
 import static java.util.Arrays.asList;
 
-@Component
+@Component("overridingLocaleResolver")
 public class LocaleResolver extends AcceptHeaderLocaleResolver {
 
     private static final List<Locale> LOCALES = asList(new Locale("en"), new Locale("de"));

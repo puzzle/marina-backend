@@ -6,38 +6,46 @@ server:
 
 # Postgresql DB default Values
 spring:
-   datasource:
-      driverClassName: org.h2.Driver
-      url: jdbc:h2:mem:marina;MODE=PostgreSQL
-      username: marina
-      password: marina
-# Oauth Client configuration
-security:
-  user:
-    password: password
-  oauth2:
-    client:
-      client-id: clientid
-      client-secret: secret
-      accessTokenUri: https://localhost/token
-      userAuthorizationUri: https://localhost/auth
-      tokenName: access_token
-      authenticationScheme: header
-      clientAuthenticationScheme: header
-    resource:
-      userInfoUri: https://localhost/userinfo
-    authorization:
-      checkTokenAccess: isAuthenticated()
-  enable-csrf: false
-  redirecturl:
-     frontend: /
-     logout: /logout
-  cors:
-    enable: true
-    allow-origin: "*"
-    
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:marina;MODE=PostgreSQL
+    username: marina
+    password: marina
+  security:
+    user:
+      password: password
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            clientId: clientid
+            clientSecret: secret
+            clientName: Keycloak
+            authorizationGrantType: authorization_code
+            tokenName: access_token
+            redirectUri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            redirectUriTemplate: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - openid
+
+        provider:
+          keycloak:
+            authorizationUri: https://localhost/auth
+            tokenUri: https://localhost/token
+            userInfoUri: https://localhost/userinfo
+            jwkSetUri: http://localhost:8090/auth/realms/devenv/protocol/openid-connect/certs
+            userNameAttribute: preferred_username
+
 application:
   sentryUrlFrontend: https://key@localhost/project
+  security:
+    enable-csrf: false
+    redirecturl:
+      frontend: /
+      logout: /logout
+    cors:
+      enable: true
+      allow-origin: "*"
 
 logging:
   level:
