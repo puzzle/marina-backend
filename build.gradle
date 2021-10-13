@@ -37,6 +37,11 @@ repositories {
     mavenCentral()
 }
 
+jar {
+    bootJar.enabled = true
+    jar.enabled = false
+}
+
 bootJar {
     manifest {
         attributes 'Implementation-Title': project.name,
