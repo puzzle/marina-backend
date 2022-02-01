@@ -1,0 +1,25 @@
+# run all unit tests and build the marina-backend
+
+name: Marina Build Pipeline
+
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'zulu'
+      - name: Build marina-backend with Gradle
+        uses: gradle/gradle-build-action@bc3340afc5e3cc44f2321809ac090d731c13c514
+        with:
+          arguments: clean build
