@@ -104,7 +104,7 @@ public class CurrentConfiguration extends AbstractEntity {
             return BigDecimal.valueOf(100)
                     .divide(employee.getBruttoSalary(), 10, RoundingMode.FLOOR)
                     .multiply(amountChf)
-                    .setScale(0 , RoundingMode.FLOOR);
+                    .setScale(0 , RoundingMode.HALF_UP);
         } else {
             return BigDecimal.ZERO;
         }
