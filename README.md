@@ -15,6 +15,11 @@ SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
 
 For further details on the development environment, please see the [corresponding documentation](devenv).
 
+Run tests:
+```shell
+./gradlew clean test
+```
+
 ## Start Application with Docker pure
 
 First start a Postgresql container with attached volume, run in the project root
