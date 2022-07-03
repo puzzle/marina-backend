@@ -39,13 +39,12 @@ pipeline {
 								// get current commit and use it as build input
 								def shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
 								def gitRepo = sh(returnStdout: true, script: 'git config remote.origin.url').trim()
-								def buildSelector = openshift.startBuild("marina-backend","--commit="+shortCommit,
-								"-e GIT_REPO_URL="+gitRepo, "-e GIT_COMMIT="+shortCommit, "-e BUILD_NUMBER=${env.BUILD_NUMBER}",
-								"-e JOB_NAME=${env.JOB_NAME}", "-e BRANCH_NAME=${env.BRANCH_NAME}", "-e BUILD_URL=${env.BUILD_URL}")
-								timeout(10) {
-									buildSelector.untilEach(1) {
-										return (it.object().status.phase == "Complete")
-									}
+								def build = openshift.startBuild("marina-backend","--commit="+shortCommit,
+									"-e GIT_REPO_URL="+gitRepo, "-e GIT_COMMIT="+shortCommit, "-e BUILD_NUMBER=${env.BUILD_NUMBER}",
+									"-e JOB_NAME=${env.JOB_NAME}", "-e BRANCH_NAME=${env.BRANCH_NAME}", "-e BUILD_URL=${env.BUILD_URL}")
+								build.logs('-f')  // Wait for build to complete and tail its log
+								if (build.object().status.phase == 'Failed') {
+									error("openshift build ${build.object().metadata.name} failed")
 								}
 							}
 						}
@@ -56,24 +55,17 @@ pipeline {
         stage('Deploy to Dev') {
             steps {
                 script{
-                	def ocDir = tool "oc"
-                	withEnv(["PATH+OC=${ocDir}/bin"]) {
-		                openshift.withCluster("${params.openshift_cluster}", "${params.openshift_cluster_token}" ) {
+					openshift.withCluster("${params.openshift_cluster}") {
+						openshift.withCredentials(env.OC_TOKEN) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging dev, Project: ${openshift.project()}"
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:latest", "${params.build_project}/marina-backend:dev")
-
 						    }
 						    openshift.withProject("${params.dev_project}") {
 						        echo "Deploying to dev, Project: ${openshift.project()}"
-						        def deploySelector = openshift.selector("dc/marina-backend").rollout().latest()
-
-								def latestDeploymentVersion = openshift.selector('dc',"marina-backend").object().status.latestVersion
-								def rc = openshift.selector('rc', "marina-backend-${latestDeploymentVersion}")
-								rc.untilEach(1){
-								     def rcMap = it.object()
-								     return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
-								}
+								def dc = openshift.selector("dc/marina-backend");
+						        dc.rollout().latest()
+								dc.rollout().status() // Wait for deployment to complete
 						    }
 						}
 					}
@@ -88,9 +80,8 @@ pipeline {
         stage('Deploy to Test') {
             steps {
                 script{
-                	def ocDir = tool "oc"
-                	withEnv(["PATH+OC=${ocDir}/bin"]) {
-		                openshift.withCluster("${params.openshift_cluster}", "${params.openshift_cluster_token}" ) {
+					openshift.withCluster("${params.openshift_cluster}") {
+						openshift.withCredentials(env.OC_TOKEN) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging test, Project: ${openshift.project()}"
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:dev", "pitc-marina-build/marina-backend:test")
@@ -98,13 +89,9 @@ pipeline {
 						    }
 						    openshift.withProject("${params.test_project}") {
 						        echo "Deploying to test, Project: ${openshift.project()}"
-						        def deploySelector = openshift.selector("dc/marina-backend").rollout().latest()
-						        def latestDeploymentVersion = openshift.selector('dc',"marina-backend").object().status.latestVersion
-								def rc = openshift.selector('rc', "marina-backend-${latestDeploymentVersion}")
-								rc.untilEach(1){
-								     def rcMap = it.object()
-								     return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
-								}
+								def dc = openshift.selector("dc/marina-backend");
+						        dc.rollout().latest()
+								dc.rollout().status() // Wait for deployment to complete
 						    }
 						}
 					}
@@ -123,9 +110,8 @@ pipeline {
             }
             steps {
                 script{
-                	def ocDir = tool "oc"
-                	withEnv(["PATH+OC=${ocDir}/bin"]) {
-		                openshift.withCluster("${params.openshift_cluster}", "${params.openshift_cluster_token}" ) {
+					openshift.withCluster("${params.openshift_cluster}") {
+						openshift.withCredentials(env.OC_TOKEN) {
 						    openshift.withProject("${params.build_project}") {
 						        echo "Tagging prod, Project: ${openshift.project()}"
 						        def tagSelector = openshift.tag("${params.build_project}/marina-backend:test", "pitc-marina-build/marina-backend:prod")
@@ -133,13 +119,9 @@ pipeline {
 						    }
 						    openshift.withProject("${params.prod_project}") {
 						        echo "Deploying to prod, Project: ${openshift.project()}"
-						        def deploySelector = openshift.selector("dc/marina-backend").rollout().latest()
-						        def latestDeploymentVersion = openshift.selector('dc',"marina-backend").object().status.latestVersion
-								def rc = openshift.selector('rc', "marina-backend-${latestDeploymentVersion}")
-								rc.untilEach(1){
-								     def rcMap = it.object()
-								     return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
-								}
+								def dc = openshift.selector("dc/marina-backend");
+						        dc.rollout().latest()
+								dc.rollout().status() // Wait for deployment to complete
 						    }
 						}
 					}
